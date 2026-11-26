@@ -31,7 +31,7 @@ Page({
     this.draft = this.draft.filter(item => available.has(item.id) && available.get(item.id).includes(item.option))
     const categories = ['全部', ...CATEGORIES.filter(category => room.dishes.some(dish => dish.category === category))]
     const category = categories.includes(this.data.category) ? this.data.category : '全部'
-    this.setData({ room, categories, category, countdown: countdown(room.deadline) })
+    this.setData({ room, categories, category, deadlineText: room.autoClose ? countdown(room.deadline) : '由发起人手动收单' })
     this.updateDishes()
   },
   updateDishes() {
@@ -59,8 +59,15 @@ Page({
   },
   chooseOption(event) {
     const dish = this.data.visibleDishes.find(item => item.id === event.currentTarget.dataset.id)
-    this.variants[dish.id] = dish.choices[Number(event.detail.value)]
+    const option = dish && dish.choices[Number(event.detail.value)]
+    if (!option || dish.soldOut) return
+    this.variants[dish.id] = option
     this.updateDishes()
+  },
+  showDish(event) {
+    const { id } = event.currentTarget.dataset
+    if (!this.data.visibleDishes.some(dish => dish.id === id)) return
+    wx.navigateTo({ url: '/pages/dish/index?id=' + encodeURIComponent(this.roomId) + '&dishId=' + encodeURIComponent(id) })
   },
   changeCount(event) {
     const { id, step } = event.currentTarget.dataset

@@ -7,7 +7,6 @@
 .room-note { font-size: 23rpx; color: #aeb8d4; margin-top: 6rpx; }
 .invite-badge { padding: 7rpx 17rpx; border-radius: 22rpx; background: #ff9f0a; color: #251801; font-size: 22rpx; font-weight: 730; }
 
-.join { padding-top: calc(108rpx + env(safe-area-inset-top)); }
 .join .intro { padding-bottom: 12rpx; }
 .join .invite-title { font-size: 49rpx; }
 .join .join-hint { margin-top: 12rpx; text-align: center; }

@@ -17,6 +17,7 @@ async function api(action, input = {}) {
   }
   if (!result || !result.ok) {
     const error = new Error(result && result.message || '服务暂不可用，请稍后重试')
+    error.code = result && result.code
     if (result && result.code === 'ACCOUNT_REQUIRED') error.redirecting = requestAccount()
     throw error
   }

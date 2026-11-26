@@ -1,8 +1,10 @@
 const { countdown, confirm, go, perform, poll, stop, toast } = require('../../utils/ui')
-const { refreshRoom, changeRoom, showResult } = require('../../utils/room')
+const { refreshRoom, changeRoom, showResult, deleteRoom } = require('../../utils/room')
+const categories = require('../../utils/categories')
+const blankDish = () => ({ name: '', categoryIndex: 0, description: '', optionText: '' })
 
 Page({
-  data: { room: null, management: false, stock: false },
+  data: { room: null, management: false, stock: false, addingDish: false, categories, draftDish: blankDish(), dishNameReady: false },
   onLoad(options) { this.roomId = options.id },
   onShow() { this.visible = true; this.refresh(); poll(this) },
   onHide() { this.visible = false; stop(this) },
@@ -29,6 +31,28 @@ Page({
     return perform(this, async () => this.updateRoom(await changeRoom(this, 'close')))
   },
   manage() { this.setData({ management: !this.data.management }) },
+  toggleAddDish() { this.setData({ addingDish: !this.data.addingDish }) },
+  editDish(event) {
+    const { field } = event.currentTarget.dataset
+    const value = event.detail.value
+    const patch = { ['draftDish.' + field]: value }
+    if (field === 'name') patch.dishNameReady = Boolean(value.trim())
+    this.setData(patch)
+  },
+  setDishCategory(event) { this.setData({ 'draftDish.categoryIndex': Number(event.detail.value) }) },
+  addDish() {
+    if (!this.data.room?.isHost || !this.data.dishNameReady) return
+    return perform(this, async () => {
+      const { name, categoryIndex, description, optionText } = this.data.draftDish
+      const options = optionText.split(/[、，,]/).map(value => value.trim()).filter(Boolean)
+      this.updateRoom(await changeRoom(this, 'addDish', { dish: {
+        name, category: categories[categoryIndex], description, options
+      } }))
+      this.setData({ draftDish: blankDish(), dishNameReady: false, addingDish: false })
+      toast('已加入本场菜单')
+    })
+  },
+  deleteRoom,
   showStock() { this.setData({ stock: !this.data.stock }) },
   invite() { go('invite', this.roomId) },
   toggleInvite(event) {

@@ -1,0 +1,26 @@
+<top-bar title="菜品详情" />
+<view class="shell flow dish-page">
+  <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <view wx:elif="{{!dish}}" class="state">正在加载菜品…</view>
+  <block wx:else>
+    <view class="dish-hero">
+      <view class="dish-icon"><glyph name="{{dish.icon || 'bowl'}}" size="{{57}}" /></view>
+      <view class="grow">
+        <view class="dish-title">{{dish.name}}</view>
+        <view class="dish-meta">{{room.name}} · {{dish.category}}</view>
+      </view>
+      <text class="badge {{dish.soldOut || room.closedAt ? 'amber' : 'green'}}">{{status}}</text>
+    </view>
+    <view class="card card-pad dish-information">
+      <view class="section-title">菜品说明</view>
+      <text class="description {{dish.description ? '' : 'dim'}}">{{dish.description || '发起人还未填写菜品说明。'}}</text>
+    </view>
+    <view class="card card-pad dish-information">
+      <view class="section-title">可选做法</view>
+      <view class="methods">
+        <text wx:for="{{methods}}" wx:key="*this" class="method">{{item}}</text>
+      </view>
+    </view>
+    <button class="action-button" bindtap="returnToRoom" hover-class="pressed">{{room.closedAt ? '查看最终清单' : '返回点菜'}}</button>
+  </block>
+</view>

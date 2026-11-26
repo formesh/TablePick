@@ -8,7 +8,7 @@
     </view>
     <view class="home-title">今晚，和谁一起吃？</view>
     <view class="friends flex" wx:if="{{companions.length}}">
-      <view class="friends-list"><text wx:for="{{companions}}" wx:key="index" class="friend friend-{{index}}">{{item}}</text></view>
+      <view class="friends-list"><text wx:for="{{companions}}" wx:key="key" class="friend friend-{{index}}">{{item.glyph}}</text></view>
       <text>{{companions.length}} 位好友一起点过</text>
     </view>
   </view>

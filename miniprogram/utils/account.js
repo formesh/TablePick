@@ -10,7 +10,7 @@ function requestAccount() {
   if (!page || !page.route || '/' + page.route === accountPath) return false
   if (openingAccount) return true
 
-  const query = ['id', 'token'].flatMap(key => {
+  const query = ['id', 'token', 'dishId'].flatMap(key => {
     const value = page.options && page.options[key]
     return typeof value === 'string' && value ? [key + '=' + encodeURIComponent(value)] : []
   }).join('&')

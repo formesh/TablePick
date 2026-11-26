@@ -2,8 +2,19 @@ const { api } = require('../../utils/api')
 const CATEGORIES = require('../../utils/categories')
 const { day, clock, go, load, perform } = require('../../utils/ui')
 
+const categoryAppearance = {
+  热菜: { icon: 'flame', tone: 'warm' },
+  凉菜: { icon: 'leaf', tone: 'fresh' },
+  主食: { icon: 'bowl', tone: 'grain' },
+  汤品: { icon: 'utensils', tone: 'soup' }
+}
+
+const firstAvailableCategory = menu => menu
+  ? CATEGORIES.find(category => menu.dishes.some(dish => dish.category === category)) || ''
+  : ''
+
 Page({
-  data: { name: '', menus: [], menuIndex: 0, groups: [], selectedIds: [], expanded: '', date: '', time: '', minDate: '', autoClose: true },
+  data: { name: '', nameReady: false, menus: [], menuIndex: 0, groups: [], selectedIds: [], expanded: '', date: '', time: '', minDate: '', autoClose: true },
   onLoad(options) {
     this.initialMenu = options.id
     const now = Date.now()
@@ -19,25 +30,31 @@ Page({
       const index = Math.max(0, menus.findIndex(menu => menu.id === (this.data.menu && this.data.menu.id || this.initialMenu)))
       const menu = menus[index]
       const label = menus.map(item => item.name + ' · ' + item.dishes.length + ' 道菜')
-      const selected = menu && this.data.menu && menu.id === this.data.menu.id ?
+      const sameMenu = menu && this.data.menu && menu.id === this.data.menu.id
+      const selected = sameMenu ?
         this.data.selectedIds.filter(id => menu.dishes.some(dish => dish.id === id)) :
         menu ? menu.dishes.map(dish => dish.id) : []
-      this.setData({ menus, label, menuIndex: index, menu: menu || null })
+      const expanded = sameMenu ? this.data.expanded : firstAvailableCategory(menu)
+      this.setData({ menus, label, menuIndex: index, menu: menu || null, expanded })
       this.setSelection(selected)
     })
   },
   setSelection(selectedIds) {
+    const selected = new Set(selectedIds)
     const groups = CATEGORIES.map(category => {
+      const appearance = categoryAppearance[category]
       const dishes = (this.data.menu ? this.data.menu.dishes : []).filter(dish => dish.category === category)
-        .map(dish => ({ ...dish, selected: selectedIds.includes(dish.id) }))
-      return { category, dishes, count: dishes.filter(dish => dish.selected).length }
+        .map(dish => ({ ...dish, icon: dish.icon || appearance.icon, selected: selected.has(dish.id) }))
+      const count = dishes.filter(dish => dish.selected).length
+      return { category, ...appearance, dishes, count, allSelected: count > 0 && count === dishes.length }
     })
     this.setData({ groups, selectedIds })
   },
   menuChange(event) {
     const menuIndex = Number(event.detail.value)
     const menu = this.data.menus[menuIndex]
-    this.setData({ menuIndex, menu, expanded: '' })
+    if (!menu) return
+    this.setData({ menuIndex, menu, expanded: firstAvailableCategory(menu) })
     this.setSelection(menu.dishes.map(dish => dish.id))
   },
   toggleGroup(event) {
@@ -51,12 +68,15 @@ Page({
   },
   toggleAll(event) {
     const group = this.data.groups.find(item => item.category === event.currentTarget.dataset.category)
-    if (!group.dishes.length) return
+    if (!group || !group.dishes.length) return
     const ids = new Set(group.dishes.map(dish => dish.id))
     const selected = this.data.selectedIds.filter(id => !ids.has(id))
     this.setSelection(group.count === group.dishes.length ? selected : [...selected, ...ids])
   },
-  inputName(event) { this.setData({ name: event.detail.value }) },
+  inputName(event) {
+    const name = event.detail.value
+    this.setData({ name, nameReady: Boolean(name.trim()) })
+  },
   setDate(event) { this.setData({ date: event.detail.value }) },
   setTime(event) { this.setData({ time: event.detail.value }) },
   setAuto(event) { this.setData({ autoClose: event.detail.value }) },

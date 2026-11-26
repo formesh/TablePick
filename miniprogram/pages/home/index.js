@@ -1,11 +1,11 @@
 const { api } = require('../../utils/api')
-const { dateLabel, dateParts, navTop, go, onTab, load, poll, stop } = require('../../utils/ui')
+const { roomDeadlineLabel, dateParts, navTop, go, onTab, load, poll, stop } = require('../../utils/ui')
 
 function card(room) {
   return {
     ...room, ...dateParts(room.closedAt || room.deadline),
     percent: room.memberCount ? Math.round(room.confirmed / room.memberCount * 100) : 0,
-    deadlineLabel: dateLabel(room.deadline) + ' 截止',
+    deadlineLabel: roomDeadlineLabel(room),
     stage: room.confirmed === room.memberCount ? '全部已确认' : '正在确认'
   }
 }
@@ -22,7 +22,7 @@ Page({
       const now = new Date()
       const weekday = '日一二三四五六'[now.getDay()]
       const date = '周' + weekday + ' · ' + (now.getMonth() + 1) + '月' + now.getDate() + '日'
-      this.setData({ date, rooms, unread, companions: companions.map(name => name.slice(-1)),
+      this.setData({ date, rooms, unread, companions: companions.map((name, key) => ({ key, glyph: Array.from(name).slice(-1)[0] })),
         hosted: rooms.filter(room => room.isHost).length })
       this.filter(this.data.selected)
     }, quiet === true)

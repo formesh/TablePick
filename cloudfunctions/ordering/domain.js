@@ -39,6 +39,7 @@ const requireMember = (room, actor) => {
   return member
 }
 const requireHost = (room, actor) => check(room.owner === actor, '仅发起人可以进行这项操作')
+const requireRoom = room => check(room && !room.deletedAt, '这个饭局已删除或不存在', 'ROOM_UNAVAILABLE')
 
 function normalizeDishes(dishes, makeId) {
   check(Array.isArray(dishes) && dishes.length > 0 && dishes.length <= 60, '每份菜单需要包含 1–60 道菜')
@@ -58,7 +59,7 @@ function normalizeDishes(dishes, makeId) {
       id, name, category, description: text(dish.description, 42),
       options: Array.isArray(dish.options)
         ? [...new Set(dish.options.map(option => text(option, 14)).filter(Boolean))].slice(0, 5) : [],
-      icon: ['fish', 'egg', 'leaf', 'bowl', 'pepper', 'flame'].includes(dish.icon) ? dish.icon :
+      icon: ['fish', 'egg', 'leaf', 'bowl', 'pepper', 'flame', 'utensils'].includes(dish.icon) ? dish.icon :
         category === '凉菜' ? 'leaf' : 'bowl'
     }
   })
@@ -156,12 +157,12 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
   }
   const me = requireAccount(await store.read('profiles', actor))
   const editProfile = change => store.edit('profiles', actor, prior => change(requireAccount(prior)))
-  const rooms = () => store.roomsFor(actor)
+  const rooms = async () => (await store.roomsFor(actor)).filter(room => !room.deletedAt)
   const roomId = input.roomId
   const editRoom = change => {
     check(safeId(roomId), '房间编号有误')
     return store.edit('rooms', roomId, room => {
-      check(room, '这个房间不存在或已被移除')
+      requireRoom(room)
       return change(room)
     })
   }
@@ -244,20 +245,31 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
     case 'room': {
       check(safeId(roomId), '房间编号有误')
       const room = await store.read('rooms', roomId)
-      check(room, '这个房间不存在或已被移除')
+      requireRoom(room)
       return roomView(room, actor, now)
     }
+    case 'deleteRoom':
+      check(safeId(roomId), '房间编号有误')
+      return store.edit('rooms', roomId, room => {
+        check(room, '这个饭局已删除或不存在', 'ROOM_UNAVAILABLE')
+        requireHost(room, actor)
+        if (room.deletedAt) return { result: true }
+        room.deletedAt = now
+        room.accepting = false
+        return { data: room, result: true }
+      })
     case 'result': {
       check(safeId(roomId), '清单链接有误')
       const room = await store.read('rooms', roomId)
-      check(room && (currentMember(room, actor) || (room.resultToken && room.resultToken === input.token)),
+      requireRoom(room)
+      check(currentMember(room, actor) || (room.resultToken && room.resultToken === input.token),
         '清单链接无效，请向好友索取分享链接')
       check(statusOf(room, now), '房间仍在点菜，收单后才能查看最终清单')
       const { total, dishes } = orders(room)
       return {
         id: room._id, name: room.name, closedAt: statusOf(room, now),
         memberCount: room.members.length, confirmed: room.members.filter(person => person.state !== 'pending').length,
-        resultToken: room.resultToken || '',
+        resultToken: room.resultToken || '', isHost: room.owner === actor,
         totals: { total, dishes: dishes.map(dish => ({ id: dish.id, name: dish.name, count: dish.count,
           options: dish.options.map(({ option, count }) => ({ option, count })) })) }
       }
@@ -265,7 +277,8 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
     case 'invitation': {
       check(safeId(roomId), '邀请链接有误')
       const room = await store.read('rooms', roomId)
-      check(room && (currentMember(room, actor) || (room.accepting && room.inviteToken === input.token)), '邀请已失效，请向发起人索取新邀请')
+      requireRoom(room)
+      check(currentMember(room, actor) || (room.accepting && room.inviteToken === input.token), '邀请已失效，请向发起人索取新邀请')
       return { ...summary(room, actor, now), nickname: me.nickname }
     }
     case 'join':
@@ -358,6 +371,16 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
         if (statusOf(room, now)) return { result: roomView(room, actor, now) }
         room.closedAt = now
         addEvent(room, actor, now, makeId, 'closed', '房间已收单', '最终清单已生成')
+        return { data: room, result: roomView(room, actor, now) }
+      })
+    case 'addDish':
+      return editRoom(room => {
+        requireHost(room, actor)
+        requireOpen(room, now)
+        check(room.dishes.length < 60, '本场饭局最多供应 60 道菜')
+        const [dish] = normalizeDishes([{ ...input.dish, id: makeId() }], makeId)
+        check(!room.dishes.some(item => item.name === dish.name), '本场已有同名菜品')
+        room.dishes.push({ ...dish, soldOut: false })
         return { data: room, result: roomView(room, actor, now) }
       })
     case 'availability':

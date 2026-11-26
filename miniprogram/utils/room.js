@@ -1,6 +1,9 @@
 const { api } = require('./api')
-const { load } = require('./ui')
-const initials = name => name.length > 1 && name[0] === '小' ? name[1] : name[0]
+const { load, confirm, perform, stop, toast } = require('./ui')
+const initials = name => {
+  const [first, second] = Array.from(name)
+  return first === '小' && second ? second : first
+}
 const stateText = { pending: '待确认', confirmed: '已确认', skipped: '这次不点' }
 
 function decorate(room) {
@@ -10,14 +13,22 @@ function decorate(room) {
     itemsLabel: member.items.map(item => item.name + ' ' + item.count).join('、') ||
       (member.state === 'skipped' ? '这次不点' : '还未提交点单')
   }))
-  return { ...room, members, percent: Math.round(room.confirmed / Math.max(room.memberCount, 1) * 100) }
+  return { ...room, members, memberPreview: members.slice(0, 3), percent: Math.round(room.confirmed / Math.max(room.memberCount, 1) * 100) }
 }
 
 function refreshRoom(page, quiet, ready) {
   const ticket = page.roomTicket = (page.roomTicket || 0) + 1
   return load(page, async () => {
-    const room = await api('room', { roomId: page.roomId })
-    if (ticket === page.roomTicket) ready(decorate(room))
+    try {
+      const room = await api('room', { roomId: page.roomId })
+      if (ticket === page.roomTicket) ready(decorate(room))
+    } catch (error) {
+      if (error.code !== 'ROOM_UNAVAILABLE') throw error
+      if (ticket === page.roomTicket) {
+        stop(page)
+        page.setData({ error: error.message, room: null })
+      }
+    }
   }, quiet === true)
 }
 
@@ -35,4 +46,14 @@ function showResult(room) {
     wx.navigateBack({ delta: 1, fail: redirect })
   } else redirect()
 }
-module.exports = { refreshRoom, changeRoom, showResult }
+async function deleteRoom() {
+  if (!this.data.room?.isHost || this.data.saving) return
+  if (!await confirm('删除饭局？', '删除后，所有成员将无法查看该饭局，邀请和清单链接也会失效。')) return
+  return perform(this, async () => {
+    await api('deleteRoom', { roomId: this.roomId })
+    stop(this)
+    wx.switchTab({ url: '/pages/home/index' })
+    toast('饭局已删除')
+  })
+}
+module.exports = { refreshRoom, changeRoom, showResult, deleteRoom }

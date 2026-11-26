@@ -2,7 +2,7 @@
   "pages": [
     "pages/account/index", "pages/home/index", "pages/menus/index", "pages/profile/index", "pages/create/index",
     "pages/invite/index", "pages/room/index", "pages/progress/index", "pages/result/index",
-    "pages/join/index", "pages/messages/index", "pages/menu-edit/index"
+    "pages/join/index", "pages/messages/index", "pages/menu-edit/index", "pages/dish/index"
   ],
   "window": {
     "navigationStyle": "custom",

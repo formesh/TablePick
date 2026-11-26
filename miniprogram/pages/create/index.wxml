@@ -11,24 +11,39 @@
       <view wx:else class="field dim">正在加载菜单…</view>
     </view>
     <view wx:if="{{menu}}">
-      <view class="between field-label"><text>本场供应</text><text class="supply-count">已选 {{selectedIds.length}} / {{menu.dishes.length}}</text></view>
+      <view class="between supply-heading">
+        <text class="supply-title">本场供应</text>
+        <view class="supply-count">已选 <text>{{selectedIds.length}} / {{menu.dishes.length}}</text></view>
+      </view>
       <view class="supply">
-        <view wx:for="{{groups}}" wx:key="category" class="supply-group">
-          <view class="between">
-            <button class="group-expand flex" disabled="{{!item.dishes.length}}" data-category="{{item.category}}" bindtap="toggleGroup">
-              <text>{{item.category}} {{item.count}}</text><glyph wx:if="{{item.dishes.length}}" name="{{expanded === item.category ? 'chevron-down' : 'chevron-right'}}" tone="muted" size="{{22}}" />
+        <view wx:for="{{groups}}" wx:key="category" class="supply-group {{expanded === item.category ? 'expanded' : ''}} {{item.dishes.length ? '' : 'empty-group'}}">
+          <view class="group-heading">
+            <button class="group-expand" disabled="{{!item.dishes.length}}" data-category="{{item.category}}" bindtap="toggleGroup" hover-class="pressed"
+              aria-label="{{item.category + (expanded === item.category ? '，收起' : '，展开')}}">
+              <view class="supply-icon {{item.tone}}"><glyph name="{{item.icon}}" size="{{30}}" /></view>
+              <text class="group-name">{{item.category}}</text>
+              <text class="group-count">{{item.dishes.length ? item.count + ' / ' + item.dishes.length : '暂无菜品'}}</text>
+              <glyph wx:if="{{item.dishes.length}}" name="{{expanded === item.category ? 'chevron-down' : 'chevron-right'}}" tone="muted" size="{{22}}" />
             </button>
-            <button class="choice {{item.count ? 'checked' : ''}}" data-category="{{item.category}}" bindtap="toggleAll" disabled="{{!item.dishes.length}}" aria-label="{{item.count === item.dishes.length ? '取消选择此分类' : '选择整个分类'}}"><glyph wx:if="{{item.count}}" name="check-circle" size="{{30}}" tone="blue" /></button>
+            <button wx:if="{{item.dishes.length}}" class="group-choice" data-category="{{item.category}}" bindtap="toggleAll" hover-class="pressed"
+              aria-label="{{item.category + (item.allSelected ? '，取消全选' : '，全选')}}">
+              <view class="choice {{item.allSelected ? 'checked' : item.count ? 'partial' : ''}}">
+                <glyph wx:if="{{item.count}}" name="{{item.allSelected ? 'check' : 'minus'}}" size="{{23}}" tone="{{item.allSelected ? 'light' : 'blue'}}" />
+              </view>
+            </button>
           </view>
           <view wx:if="{{expanded === item.category}}" class="supply-dishes">
-            <button wx:for="{{item.dishes}}" wx:for-item="dish" wx:key="id" class="dish-option between" data-id="{{dish.id}}" bindtap="toggleDish">
-              <text>{{dish.name}}</text><view class="choice {{dish.selected ? 'checked' : ''}}"><glyph wx:if="{{dish.selected}}" name="check-circle" size="{{28}}" tone="blue" /></view>
+            <button wx:for="{{item.dishes}}" wx:for-item="dish" wx:key="id" class="dish-option" data-id="{{dish.id}}" bindtap="toggleDish" hover-class="pressed"
+              aria-label="{{dish.name + (dish.selected ? '，取消选中' : '，选中')}}">
+              <view class="supply-icon dish-icon {{item.tone}}"><glyph name="{{dish.icon}}" size="{{25}}" /></view>
+              <text class="dish-name">{{dish.name}}</text>
+              <view class="choice {{dish.selected ? 'checked' : ''}}"><glyph wx:if="{{dish.selected}}" name="check" size="{{21}}" tone="light" /></view>
             </button>
           </view>
         </view>
       </view>
     </view>
-    <view><text class="field-label">截止时间</text>
+    <view><text class="field-label">{{autoClose ? '截止时间' : '计划收单时间'}}</text>
       <view class="field deadline">
         <picker mode="date" value="{{date}}" start="{{minDate}}" bindchange="setDate"><view>{{date}} <glyph name="calendar" size="{{28}}" tone="muted" /></view></picker>
         <picker mode="time" value="{{time}}" bindchange="setTime"><view>{{time}} <glyph name="clock" size="{{28}}" tone="muted" /></view></picker>
@@ -38,6 +53,6 @@
       <view><view class="bold">到点自动收单</view><view class="small dim">{{autoClose ? '截止后仅可查看最终清单' : '关闭后由发起人手动收单'}}</view></view>
       <switch checked="{{autoClose}}" color="#2F80FF" bindchange="setAuto" aria-label="到点自动收单" />
     </view>
-    <button class="action-button" disabled="{{saving || loading || !menu}}" bindtap="create" hover-class="pressed">创建并邀请好友 <glyph name="arrow-right" size="{{30}}" tone="light" /></button>
+    <button class="action-button" loading="{{saving}}" disabled="{{saving || loading || !nameReady || !selectedIds.length}}" bindtap="create" hover-class="pressed">创建并邀请好友 <glyph name="arrow-right" size="{{30}}" tone="light" /></button>
   </block>
 </view>

@@ -1,12 +1,12 @@
 const { api } = require('../../utils/api')
-const { invitePath, dateLabel, load } = require('../../utils/ui')
+const { invitePath, roomDeadlineLabel, load } = require('../../utils/ui')
 Page({
   data: { room: null },
   onLoad(options) { this.roomId = options.id; this.refresh() },
   refresh() {
     return load(this, async () => {
       const room = await api('room', { roomId: this.roomId })
-      this.setData({ room, deadline: dateLabel(room.deadline) + ' 截止' })
+      this.setData({ room, deadline: roomDeadlineLabel(room) })
     })
   },
   enter() {

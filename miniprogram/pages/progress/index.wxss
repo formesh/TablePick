@@ -9,7 +9,11 @@
 .member-description { margin-top: 4rpx; overflow-wrap: break-word; }
 .total-dish { min-height: 96rpx; padding: 18rpx 23rpx; }
 .total-dish .dim { margin-top: 4rpx; }
-.stock-toggle { color: #943542; background: #fff1f2; font-size: 23rpx; min-height: 66rpx; padding: 10rpx 20rpx; border-radius: 24rpx; width: 100%; text-align: left; justify-content: flex-start; }
+.stock-toggle { color: #943542; background: #fff1f2; font-size: 23rpx; min-height: 66rpx; padding: 10rpx 20rpx; border-radius: 24rpx; width: 100% !important; text-align: left; justify-content: flex-start; }
+.stock-item .link { flex: none; }
 .stock-toggle glyph:last-child { margin-left: auto; }
 .stock-item + .stock-item { border-top: 2rpx solid #eff1f6; }
 .manage-panel switch { transform: scale(.82); transform-origin: right; }
+.manage-panel .add-dish-toggle { background: #eaf1ff; min-height: 68rpx; color: #173f82; }
+.add-dish-form { gap: 12rpx; padding: 16rpx 0; border-top: 2rpx solid #e8edf7; }
+.add-dish-form .field { background: #f2f5fa; box-shadow: none; min-height: 70rpx; }

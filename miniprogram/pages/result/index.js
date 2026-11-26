@@ -1,5 +1,6 @@
 const { api } = require('../../utils/api')
 const { dateLabel, load, toast } = require('../../utils/ui')
+const { deleteRoom } = require('../../utils/room')
 Page({
   data: { room: null },
   onLoad(options) {
@@ -25,6 +26,7 @@ Page({
     }
     wx.setClipboardData({ data: lines.join('\n'), fail: () => toast('暂时无法复制，请重试') })
   },
+  deleteRoom,
   onShareAppMessage() {
     const room = this.data.room
     if (!room || !room.resultToken) return { title: 'TablePick', path: '/pages/home/index' }

@@ -6,15 +6,17 @@
   <view class="state card" wx:if="{{error}}">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
   <view wx:elif="{{loading && !menus.length}}" class="state">正在加载菜单…</view>
   <view wx:elif="{{!menus.length}}" class="state card">还没有菜单。<button class="link" bindtap="newMenu">新建菜单</button></view>
-  <view wx:for="{{menus}}" wx:key="id" class="card menu-card">
-    <view class="flex">
-      <view class="tile {{item.tone}}"><glyph name="{{item.icon}}" size="{{42}}" tone="light" /></view>
-      <view class="grow"><view class="item-name">{{item.name}}</view><view class="small dim detail">{{item.dishes.length}} 道菜<text wx:if="{{item.detail}}"> · {{item.detail}}</text></view></view>
-      <button class="more-button" data-id="{{item.id}}" bindtap="edit" aria-label="编辑菜单"><glyph name="more" size="{{32}}" tone="muted" /></button>
+  <block wx:else>
+    <view wx:for="{{menus}}" wx:key="id" class="card menu-card">
+      <view class="flex">
+        <view class="tile {{item.tone}}"><glyph name="{{item.icon}}" size="{{42}}" tone="light" /></view>
+        <view class="grow"><view class="item-name">{{item.name}}</view><view class="small dim detail">{{item.dishes.length}} 道菜<text wx:if="{{item.detail}}"> · {{item.detail}}</text></view></view>
+        <button class="more-button" data-id="{{item.id}}" bindtap="edit" aria-label="编辑菜单"><glyph name="more" size="{{32}}" tone="muted" /></button>
+      </view>
+      <view class="bottom-actions">
+        <button class="action-button compact view-button" data-id="{{item.id}}" bindtap="edit" hover-class="pressed"><glyph name="list" size="{{30}}" />查看菜品</button>
+        <button class="action-button compact" data-id="{{item.id}}" bindtap="create" hover-class="pressed"><glyph name="sparkles" size="{{27}}" tone="light" />快速开一场</button>
+      </view>
     </view>
-    <view class="bottom-actions">
-      <button class="action-button compact view-button" data-id="{{item.id}}" bindtap="edit" hover-class="pressed"><glyph name="list" size="{{30}}" />查看菜品</button>
-      <button class="action-button compact" data-id="{{item.id}}" bindtap="create" hover-class="pressed"><glyph name="sparkles" size="{{27}}" tone="light" />快速开一场</button>
-    </view>
-  </view>
+  </block>
 </view>

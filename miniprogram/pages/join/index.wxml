@@ -1,4 +1,4 @@
-<view class="shell flow join">
+<view class="shell flow join" style="padding-top:{{top}}px">
   <view wx:if="{{error}}" class="card state">{{error}}<button class="link" bindtap="refresh">重试</button><button class="link" bindtap="home">返回</button></view>
   <view wx:elif="{{loading}}" class="state">正在打开邀请…</view>
   <block wx:elif="{{room}}">

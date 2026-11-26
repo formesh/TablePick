@@ -1,16 +1,17 @@
 const { api } = require('../../utils/api')
-const { dateLabel, load, perform, back } = require('../../utils/ui')
+const { roomDeadlineLabel, navTop, load, perform, back } = require('../../utils/ui')
 Page({
-  data: { nickname: '' },
+  data: { nickname: '', top: 76 },
   onLoad(options) {
     this.roomId = options.id
     this.token = options.token
+    this.setData({ top: navTop() })
     this.refresh()
   },
   refresh() {
     return load(this, async () => {
       const room = await api('invitation', { roomId: this.roomId, token: this.token })
-      this.setData({ room, nickname: room.nickname, deadline: dateLabel(room.deadline) + ' 截止' })
+      this.setData({ room, nickname: room.nickname, deadline: roomDeadlineLabel(room) })
     })
   },
   inputName(event) { this.setData({ nickname: event.detail.value }) },

@@ -9,10 +9,22 @@
       <view class="grow"><view class="summary-title">已确认 {{room.total}} 份</view><view class="small">{{room.memberCount}} 人已加入 · {{room.confirmed}} 人已确认</view></view>
       <button wx:if="{{room.isHost}}" class="action-button compact close-orders" disabled="{{saving}}" bindtap="close"><glyph name="lock" tone="peach" size="{{26}}" />收单</button>
     </view>
-    <view class="between"><text class="section-title">成员进度</text><button class="link" wx:if="{{room.isHost}}" bindtap="manage">管理加入 <glyph name="chevron-right" size="{{22}}" tone="muted" /></button></view>
+    <view class="between"><text class="section-title">成员进度</text><button class="link" wx:if="{{room.isHost}}" bindtap="manage">{{management ? '收起管理' : '管理饭局'}} <glyph name="{{management ? 'chevron-down' : 'chevron-right'}}" size="{{22}}" tone="muted" /></button></view>
     <view class="card card-pad flow manage-panel" wx:if="{{management && room.isHost}}">
       <view class="between"><view><view class="bold">允许好友加入</view><view class="small dim">关闭后，之前的邀请链接会失效</view></view><switch checked="{{room.accepting}}" disabled="{{saving}}" color="#2F80FF" bindchange="toggleInvite" /></view>
       <button wx:if="{{room.inviteToken}}" class="action-button compact" bindtap="invite"><glyph name="share" size="{{25}}" tone="light" />邀请好友</button>
+      <button class="action-button secondary add-dish-toggle" disabled="{{saving}}" bindtap="toggleAddDish"><glyph name="{{addingDish ? 'minus' : 'plus'}}" size="{{27}}" tone="blue" />{{addingDish ? '收起加菜表单' : '临时加菜'}}</button>
+      <view wx:if="{{addingDish}}" class="flow add-dish-form">
+        <text class="small dim">新菜只加入本场饭局。</text>
+        <view class="field"><input value="{{draftDish.name}}" placeholder="菜名" maxlength="24" aria-label="菜名" data-field="name" bindinput="editDish" /></view>
+        <picker mode="selector" range="{{categories}}" value="{{draftDish.categoryIndex}}" bindchange="setDishCategory">
+          <view class="field between"><text>{{categories[draftDish.categoryIndex]}}</text><glyph name="chevron-down" size="{{25}}" tone="muted" /></view>
+        </picker>
+        <view class="field"><input value="{{draftDish.description}}" placeholder="菜品说明（选填）" maxlength="42" aria-label="菜品说明" data-field="description" bindinput="editDish" /></view>
+        <view class="field"><input value="{{draftDish.optionText}}" placeholder="可选做法，例如：微辣、不辣" maxlength="75" aria-label="可选做法" data-field="optionText" bindinput="editDish" /></view>
+        <button class="action-button primary" loading="{{saving}}" disabled="{{saving || !dishNameReady}}" bindtap="addDish">加入本场菜单</button>
+      </view>
+      <button class="link danger-link" disabled="{{saving}}" bindtap="deleteRoom"><glyph name="trash" size="{{26}}" />删除饭局</button>
     </view>
     <view class="card member-list">
       <view class="member flex" wx:for="{{room.members}}" wx:key="key">

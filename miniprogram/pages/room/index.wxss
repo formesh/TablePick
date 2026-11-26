@@ -6,15 +6,17 @@
 .member-icons { gap: 0; padding-left: 7rpx; }
 .member-icons .avatar { width: 51rpx; height: 51rpx; font-size: 21rpx; margin-left: -7rpx; border: 2rpx solid #f2f4fd; }
 .categories { white-space: nowrap; display: flex; }
-.category { width: auto !important; border-radius: 30rpx; padding: 11rpx 20rpx; min-height: 54rpx; background: #ffffffc9; font-size: 23rpx; margin-right: 13rpx; display: inline-flex; align-items: center; }
+.category { width: auto !important; border-radius: 30rpx; padding: 11rpx 20rpx; min-height: 54rpx; background: #ffffffc9; font-size: 23rpx; margin: 0 13rpx 0 0 !important; display: inline-flex; align-items: center; }
 .category-active { color: #fff; background: #1c1c1e; }
 .dish { padding: 18rpx 21rpx; display: flex; align-items: center; gap: 17rpx; min-height: 123rpx; }
 .dish.ordered { border-color: #8072ff; }
 .dish .tile { width: 93rpx; height: 93rpx; }
 .dish-name { font-size: 29rpx; font-weight: 680; overflow-wrap: break-word; }
+.dish-detail { min-height: 42rpx; gap: 3rpx; font-size: 22rpx; }
 .dish-description { margin: 4rpx 0; font-size: 21rpx; color: #6e7480; }
-.choice-tag { gap: 5rpx; }
-.choice-tag text { padding-left: 4rpx; }
+.choice-tag { max-width: 100%; box-sizing: border-box; gap: 5rpx; }
+.choice-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.all-portions { display: block; margin-top: 4rpx; }
 .sold-out .tile { opacity: .6; }
 .quantity { display: flex; align-items: center; gap: 11rpx; font-size: 25rpx; font-weight: 650; }
 .quantity text { min-width: 29rpx; text-align: center; }

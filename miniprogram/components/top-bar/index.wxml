@@ -1,7 +1,6 @@
 <view class="top" style="padding-top:{{top}}px">
   <view class="bar {{centered ? '' : 'leading'}}">
     <button wx:if="{{showBack}}" class="back" bindtap="back" aria-label="返回"><glyph name="chevron-left" size="{{30}}" /></button>
-    <view wx:elif="{{centered}}" class="placeholder"></view>
     <view class="titles">
       <view class="title">{{title}}</view><view wx:if="{{subtitle}}" class="subtitle">{{subtitle}}</view>
     </view>

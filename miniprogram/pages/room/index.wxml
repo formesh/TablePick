@@ -7,8 +7,8 @@
   <block wx:elif="{{room && !room.closedAt}}">
     <view class="room-progress">
       <view class="between">
-        <view><view class="bold">{{room.memberCount}} 人中已有 {{room.confirmed}} 人确认</view><view class="tiny dim">{{countdown}}{{room.autoClose ? '' : ' · 手动收单'}}</view></view>
-        <view class="flex member-icons"><view wx:for="{{room.members}}" wx:key="key" wx:if="{{index < 3}}" class="avatar {{item.tone}}">{{item.avatar}}</view></view>
+        <view><view class="bold">{{room.memberCount}} 人中已有 {{room.confirmed}} 人确认</view><view class="tiny dim">{{deadlineText}}</view></view>
+        <view class="flex member-icons"><view wx:for="{{room.memberPreview}}" wx:key="key" class="avatar {{item.tone}}">{{item.avatar}}</view></view>
       </view>
       <view class="progress-track"><view style="width:{{room.percent}}%"></view></view>
     </view>
@@ -33,11 +33,13 @@
         <view class="grow dish-text">
           <view class="dish-name">{{item.name}}</view>
           <view class="dish-description" wx:if="{{item.description}}">{{item.description}}</view>
+          <button class="link dish-detail" data-id="{{item.id}}" bindtap="showDish" aria-label="{{'查看' + item.name + '的详情'}}">详情<glyph name="chevron-right" size="{{19}}" tone="blue" /></button>
           <text class="badge amber" wx:if="{{item.soldOut}}">已售罄</text>
           <picker wx:elif="{{item.choices.length > 1}}" mode="selector" range="{{item.choices}}" value="{{item.optionIndex}}" data-id="{{item.id}}" bindchange="chooseOption">
-            <view class="badge choice-tag">{{item.option}}<glyph name="chevron-down" size="{{17}}" tone="violet" /><text wx:if="{{item.total > item.count}}">共 {{item.total}} 份</text></view>
+            <view class="badge choice-tag"><text class="choice-label">{{item.option}}</text><glyph name="chevron-down" size="{{17}}" tone="violet" /></view>
           </picker>
-          <text class="badge" wx:elif="{{item.option !== '默认做法'}}">{{item.option}}</text>
+          <text class="badge choice-tag" wx:elif="{{item.option !== '默认做法'}}"><text class="choice-label">{{item.option}}</text></text>
+          <text class="tiny dim all-portions" wx:if="{{!item.soldOut && item.total > item.count}}">各做法共 {{item.total}} 份</text>
         </view>
         <view class="quantity" wx:if="{{!item.soldOut}}">
           <button class="adjust remove" data-id="{{item.id}}" data-step="-1" bindtap="changeCount" disabled="{{!item.count || room.myState !== 'pending' || saving}}" aria-label="减少份数"><glyph name="minus" size="{{28}}" /></button>

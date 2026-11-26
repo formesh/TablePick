@@ -173,3 +173,50 @@ test('用户资料保存并返回本人选择的头像', async () => {
   await call('setProfile', { nickname: '新昵称' })
   assert.equal((await call('profile')).avatar, avatar)
 })
+
+test('发起人可以删除进行中和已收单的饭局，成员和分享链接随即失效', async () => {
+  for (const closed of [false, true]) {
+    const { call, create, join, register } = fixture()
+    const room = await create()
+    const roomId = room.id
+    await register('guest', '小周')
+    await join(room, '小周', 'guest')
+    let token
+    if (closed) {
+      await call('close', { roomId })
+      token = (await call('result', { roomId })).resultToken
+    }
+    await assert.rejects(call('deleteRoom', { roomId }, 'guest'), /仅发起人/)
+    await call('deleteRoom', { roomId })
+    assert.equal(await call('deleteRoom', { roomId }), true)
+    assert.deepEqual((await call('dashboard')).rooms, [])
+    assert.deepEqual((await call('dashboard', {}, 'guest')).rooms, [])
+    await assert.rejects(call('invitation', { roomId, token: room.inviteToken }, 'guest'), { code: 'ROOM_UNAVAILABLE' })
+    await assert.rejects(call('result', { roomId, token }, 'guest'), { code: 'ROOM_UNAVAILABLE' })
+    await assert.rejects(call('room', { roomId }, 'guest'), { code: 'ROOM_UNAVAILABLE' })
+  }
+})
+
+test('发起人临时加菜后成员可点单，原菜单和已收单饭局保持原样', async () => {
+  const { call, create, join, register, submit } = fixture()
+  const room = await create()
+  const roomId = room.id
+  await register('guest', '小周')
+  await join(room, '小周', 'guest')
+  const dish = { name: '番茄汤', category: '汤品', description: '当日供应', options: ['少盐'], id: 'fish' }
+  await assert.rejects(call('addDish', { roomId, dish }, 'guest'), /仅发起人/)
+  const updated = await call('addDish', { roomId, dish })
+  const added = updated.dishes.find(entry => entry.name === dish.name)
+  assert.ok(added)
+  assert.notEqual(added.id, dish.id)
+  assert.equal(added.soldOut, false)
+  await assert.rejects(call('addDish', { roomId, dish }), /已有同名/)
+  assert.ok((await call('room', { roomId }, 'guest')).dishes.some(entry => entry.id === added.id))
+  const [menu] = await call('menus')
+  assert.equal(menu.dishes.some(entry => entry.name === dish.name), false)
+  await submit(room, 'guest', 'confirmed', [{ id: added.id, option: '少盐', count: 2 }])
+  await call('close', { roomId })
+  await assert.rejects(call('addDish', { roomId, dish: { ...dish, name: '紫菜汤' } }), /已收单/)
+  const result = await call('result', { roomId })
+  assert.equal(result.totals.dishes.find(entry => entry.id === added.id).count, 2)
+})

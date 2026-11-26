@@ -1,6 +1,6 @@
 page { min-height: 100%; color: #111827; background: #eef2f9 linear-gradient(155deg, #f8faff, #eef2f9 74%) fixed; font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif; font-size: 28rpx; line-height: 1.4; -webkit-font-smoothing: antialiased; }
 view, input, textarea, button { box-sizing: border-box; }
-button { width: auto; max-width: none; margin: 0; padding: 0; border-radius: 0; background: transparent; color: inherit; line-height: 1.25; font-size: inherit; font-weight: inherit; text-align: center; }
+button { width: auto; max-width: none; margin: 0 !important; padding: 0; border-radius: 0; background: transparent; color: inherit; line-height: 1.25; font-size: inherit; font-weight: inherit; text-align: center; }
 button::after { border: 0; }
 button[disabled]:not([type]) { opacity: .56; color: inherit; background: inherit; }
 .pressed { opacity: .78; }
@@ -27,6 +27,7 @@ button[disabled]:not([type]) { opacity: .56; color: inherit; background: inherit
 .action-button.compact { width: auto !important; min-height: 66rpx; padding: 12rpx 24rpx; font-size: 25rpx; border-radius: 22rpx; }
 .icon-button { width: 72rpx !important; height: 72rpx; display: flex; justify-content: center; align-items: center; flex: none; border-radius: 50%; background: #ffffffd7; box-shadow: 0 6rpx 18rpx #2636520b; }
 .link { width: auto !important; font-size: 24rpx; color: #1768dd; min-height: 58rpx; display: flex; align-items: center; }
+.danger-link { color: #a43e4a; justify-content: center; gap: 8rpx; }
 .field-label { color: #535d6d; font-size: 26rpx; font-weight: 600; display: block; margin-bottom: 11rpx; }
 .field { min-height: 86rpx; padding: 18rpx 22rpx; display: flex; align-items: center; gap: 12rpx; border-radius: 26rpx; background: #ffffffde; box-shadow: 0 7rpx 16rpx #2536540a; }
 .field input { flex: 1; min-width: 0; min-height: 54rpx; }
@@ -49,6 +50,6 @@ button[disabled]:not([type]) { opacity: .56; color: inherit; background: inherit
 .progress-track { height: 10rpx; border-radius: 10rpx; background: #cdd7f7; overflow: hidden; }
 .progress-track view { height: 100%; border-radius: inherit; background: #6059f5; }
 .state { text-align: center; padding: 34rpx 24rpx; color: #5f687a; font-size: 26rpx; }
-.state .link { justify-content: center; margin: 10rpx auto 0; }
+.state .link { justify-content: center; margin: 10rpx auto 0 !important; }
 .bottom-actions { display: flex; gap: 14rpx; }
 .bottom-actions .action-button { flex: 1; min-width: 0; width: 0 !important; }

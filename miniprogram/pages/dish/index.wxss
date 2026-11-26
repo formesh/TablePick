@@ -1,0 +1,8 @@
+.dish-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 17rpx; padding: 29rpx 25rpx; border: 2rpx solid #fff; border-radius: 34rpx; background: linear-gradient(138deg, #fff3ed, #eeeaff 64%, #e7f0ff); box-shadow: 0 12rpx 27rpx #394b8515; }
+.dish-icon { display: flex; align-items: center; justify-content: center; flex: none; width: 94rpx; height: 94rpx; border-radius: 27rpx; background: #ffffffb8; }
+.dish-title { font-size: 41rpx; line-height: 1.16; font-weight: 750; overflow-wrap: break-word; }
+.dish-meta { margin-top: 7rpx; font-size: 23rpx; color: #5f6779; overflow-wrap: break-word; }
+.dish-information .section-title { font-size: 30rpx; margin-bottom: 12rpx; }
+.description { display: block; white-space: pre-wrap; overflow-wrap: break-word; }
+.methods { display: flex; flex-wrap: wrap; gap: 10rpx; }
+.method { max-width: 100%; padding: 8rpx 17rpx; border-radius: 19rpx; background: #eef1ff; color: #373b80; font-size: 24rpx; overflow-wrap: break-word; }

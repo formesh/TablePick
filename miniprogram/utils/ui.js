@@ -19,6 +19,10 @@ function dateLabel(value, now = Date.now()) {
   const suffix = day(value) === day(now) ? '今天' : day(value) === day(tomorrow) ? '明天' : date.month + date.dayNumber + '日'
   return suffix + ' ' + clock(value)
 }
+function roomDeadlineLabel(room) {
+  if (room.closedAt) return '已于' + dateLabel(room.closedAt) + '收单'
+  return room.autoClose ? dateLabel(room.deadline) + ' 截止' : '由发起人手动收单'
+}
 function countdown(value, now = Date.now()) {
   const minutes = Math.ceil((value - now) / 60000)
   if (minutes <= 0) return '已到截止时间'
@@ -72,8 +76,11 @@ async function perform(page, work) {
 }
 function poll(page, interval = 5000) {
   stop(page)
-  page.pollTimer = setInterval(() => {
-    if (!page.data.loading && !page.data.saving && !page.data.error) page.refresh(true)
+  let refreshing = false
+  page.pollTimer = setInterval(async () => {
+    if (refreshing || page.data.loading || page.data.saving || page.data.error) return
+    refreshing = true
+    try { await page.refresh(true) } finally { refreshing = false }
   }, interval)
 }
 function stop(page) {
@@ -85,4 +92,4 @@ function confirm(title, content) {
     success: response => resolve(response.confirm), fail: () => resolve(false) }))
 }
 
-module.exports = { day, clock, dateParts, dateLabel, countdown, navTop, invitePath, go, back, onTab, toast, load, perform, poll, stop, confirm }
+module.exports = { day, clock, dateParts, dateLabel, roomDeadlineLabel, countdown, navTop, invitePath, go, back, onTab, toast, load, perform, poll, stop, confirm }

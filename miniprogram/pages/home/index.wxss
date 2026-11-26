@@ -39,7 +39,7 @@
 .closed-room { background: #eeeaf7; color: #24202b; }
 .ticket { min-width: 100rpx; height: 111rpx; margin-right: 12rpx; border-radius: 28rpx; line-height: 1.05; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(145deg,#7168ff,#5e5ce6); font-size: 20rpx; font-weight: 650; }
 .ticket text:last-child { font-size: 43rpx; }
-.closed-title { font-size: 34rpx; font-weight: 730; word-break: break-word; }
+.closed-title { flex: 1; min-width: 0; font-size: 34rpx; font-weight: 730; overflow-wrap: break-word; }
 .closed-meta { margin-top: 7rpx; color: #625d6b; font-size: 25rpx; }
 .closed-line { margin-top: 22rpx; color: #77717f; font-size: 23rpx; }
 .result-link { font-weight: 650; color: #4945b6; }
