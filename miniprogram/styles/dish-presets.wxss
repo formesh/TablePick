@@ -1,0 +1,5 @@
+.preset-panel { padding: 4rpx 22rpx; }
+.preset-heading { width: 100% !important; min-height: 75rpx; font-weight: 650; }
+.preset-groups { display: flex; flex-direction: column; gap: 17rpx; padding: 12rpx 0 21rpx; border-top: 2rpx solid #edf1f8; }
+.preset-list { display: flex; flex-wrap: wrap; gap: 9rpx; margin-top: 8rpx; }
+.preset-chip { width: auto !important; min-height: 58rpx; padding: 9rpx 13rpx; border-radius: 17rpx; background: #edf2ff; color: #273966; display: inline-flex; align-items: center; gap: 7rpx; font-size: 23rpx; }

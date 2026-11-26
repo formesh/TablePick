@@ -21,5 +21,6 @@
     ]
   },
   "style": "v2",
+  "usingComponents": { "dish-photo": "/components/dish-photo/index" },
   "sitemapLocation": "sitemap.json"
 }

@@ -48,7 +48,8 @@ function showResult(room) {
 }
 async function deleteRoom() {
   if (!this.data.room?.isHost || this.data.saving) return
-  if (!await confirm('删除饭局？', '删除后，所有成员将无法查看该饭局，邀请和清单链接也会失效。')) return
+  const button = { confirmText: '删除饭局', confirmColor: '#A43E4A' }
+  if (!await confirm('删除饭局？', '删除后，所有成员将无法查看该饭局，邀请和清单链接也会失效。', button)) return
   return perform(this, async () => {
     await api('deleteRoom', { roomId: this.roomId })
     stop(this)

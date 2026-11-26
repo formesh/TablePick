@@ -22,7 +22,9 @@
     <view class="flow result-actions">
       <button class="action-button secondary" bindtap="copy" hover-class="pressed"><glyph name="copy" size="{{32}}" />复制文字清单</button>
       <button wx:if="{{room.resultToken}}" class="action-button primary" open-type="share" hover-class="pressed"><glyph name="share" size="{{32}}" tone="light" />分享结果到微信</button>
-      <button wx:if="{{room.isHost}}" class="link danger-link" disabled="{{saving}}" bindtap="deleteRoom"><glyph name="trash" size="{{26}}" />删除饭局</button>
+      <view wx:if="{{room.isHost}}" class="delete-actions">
+        <button class="link danger-link" disabled="{{saving}}" bindtap="deleteRoom" hover-class="pressed"><glyph name="trash" size="{{24}}" tone="danger" />删除饭局</button>
+      </view>
     </view>
   </block>
 </view>

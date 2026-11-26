@@ -1,0 +1,19 @@
+<template name="dish-presets">
+  <view class="card preset-panel">
+    <button class="between preset-heading" bindtap="togglePresets" hover-class="pressed">
+      <view class="flex"><glyph name="sparkles" size="{{29}}" tone="violet" /><text>预设菜品</text></view>
+      <glyph name="{{showPresets ? 'chevron-down' : 'chevron-right'}}" size="{{25}}" tone="muted" />
+    </button>
+    <view wx:if="{{showPresets}}" class="preset-groups">
+      <view wx:for="{{presets}}" wx:for-item="group" wx:key="category">
+        <view class="small dim">{{group.category}}</view>
+        <view class="preset-list">
+          <button wx:for="{{group.dishes}}" wx:for-item="dish" wx:key="name" class="preset-chip" data-name="{{dish.name}}" bindtap="addPreset"
+            disabled="{{presetDisabled}}" hover-class="pressed" aria-label="{{'选用' + dish.name}}">
+            <glyph name="{{dish.icon}}" size="{{24}}" tone="violet" />{{dish.name}}<glyph name="plus" size="{{20}}" tone="blue" />
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>

@@ -1,4 +1,5 @@
 .dish-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 17rpx; padding: 29rpx 25rpx; border: 2rpx solid #fff; border-radius: 34rpx; background: linear-gradient(138deg, #fff3ed, #eeeaff 64%, #e7f0ff); box-shadow: 0 12rpx 27rpx #394b8515; }
+.detail-photo { width: 100%; height: 330rpx; border-radius: 31rpx; border: 2rpx solid #fff; }
 .dish-icon { display: flex; align-items: center; justify-content: center; flex: none; width: 94rpx; height: 94rpx; border-radius: 27rpx; background: #ffffffb8; }
 .dish-title { font-size: 41rpx; line-height: 1.16; font-weight: 750; overflow-wrap: break-word; }
 .dish-meta { margin-top: 7rpx; font-size: 23rpx; color: #5f6779; overflow-wrap: break-word; }

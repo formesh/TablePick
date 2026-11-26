@@ -6,3 +6,4 @@
 .blue { filter: invert(42%) sepia(83%) saturate(1933%) hue-rotate(199deg) brightness(100%); }
 .violet { filter: invert(32%) sepia(57%) saturate(2409%) hue-rotate(227deg); }
 .peach { filter: invert(77%) sepia(28%) saturate(672%) hue-rotate(321deg) brightness(105%); }
+.danger { filter: invert(27%) sepia(26%) saturate(1951%) hue-rotate(304deg) brightness(91%); }

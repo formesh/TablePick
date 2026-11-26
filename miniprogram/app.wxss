@@ -27,7 +27,9 @@ button[disabled]:not([type]) { opacity: .56; color: inherit; background: inherit
 .action-button.compact { width: auto !important; min-height: 66rpx; padding: 12rpx 24rpx; font-size: 25rpx; border-radius: 22rpx; }
 .icon-button { width: 72rpx !important; height: 72rpx; display: flex; justify-content: center; align-items: center; flex: none; border-radius: 50%; background: #ffffffd7; box-shadow: 0 6rpx 18rpx #2636520b; }
 .link { width: auto !important; font-size: 24rpx; color: #1768dd; min-height: 58rpx; display: flex; align-items: center; }
-.danger-link { color: #a43e4a; justify-content: center; gap: 8rpx; }
+.photo-controls { flex-wrap: wrap; }
+.delete-actions { display: flex; justify-content: center; border-top: 2rpx solid #e7ebf4; padding-top: 17rpx; margin-top: 4rpx; }
+.danger-link { min-height: 64rpx; padding: 8rpx 23rpx; color: #97394a; background: #fff1f3; border: 2rpx solid #f2d8dc; border-radius: 22rpx; justify-content: center; gap: 8rpx; font-weight: 600; }
 .field-label { color: #535d6d; font-size: 26rpx; font-weight: 600; display: block; margin-bottom: 11rpx; }
 .field { min-height: 86rpx; padding: 18rpx 22rpx; display: flex; align-items: center; gap: 12rpx; border-radius: 26rpx; background: #ffffffde; box-shadow: 0 7rpx 16rpx #2536540a; }
 .field input { flex: 1; min-width: 0; min-height: 54rpx; }

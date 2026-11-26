@@ -41,7 +41,26 @@ const requireMember = (room, actor) => {
 const requireHost = (room, actor) => check(room.owner === actor, '仅发起人可以进行这项操作')
 const requireRoom = room => check(room && !room.deletedAt, '这个饭局已删除或不存在', 'ROOM_UNAVAILABLE')
 
-function normalizeDishes(dishes, makeId) {
+function normalizeDishPhoto(photo, scope) {
+  if (photo === undefined || photo === '') return ''
+  const match = typeof photo === 'string' && /^cloud:\/\/[a-z0-9.-]{2,160}\/dish-photos\/([a-f0-9]{32})\/[a-f0-9]{64}\.(jpg|png|webp)$/.exec(photo)
+  check(match && match[1] === scope, '菜品图片无效，请重新上传')
+  return photo
+}
+
+function decodeDishPhoto(value) {
+  check(typeof value === 'string' && value.length <= 437000 && value.length % 4 === 0 &&
+    /^[A-Za-z0-9+/]+={0,2}$/.test(value), '图片无效或过大，请换一张')
+  const content = Buffer.from(value, 'base64')
+  check(content.length <= 320 * 1024, '图片过大，请换一张')
+  const signature = content.subarray(0, 8).toString('hex')
+  const ext = signature.startsWith('ffd8ff') ? 'jpg' : signature === '89504e470d0a1a0a' ? 'png'
+    : content.toString('ascii', 0, 4) === 'RIFF' && content.toString('ascii', 8, 12) === 'WEBP' ? 'webp' : ''
+  check(ext, '请选择 JPG、PNG 或 WebP 图片')
+  return { content, ext }
+}
+
+function normalizeDishes(dishes, makeId, photoScope) {
   check(Array.isArray(dishes) && dishes.length > 0 && dishes.length <= 60, '每份菜单需要包含 1–60 道菜')
   const names = new Set()
   const ids = new Set()
@@ -56,7 +75,7 @@ function normalizeDishes(dishes, makeId) {
     check(!ids.has(id), '菜品编号重复')
     ids.add(id)
     return {
-      id, name, category, description: text(dish.description, 42),
+      id, name, category, description: text(dish.description, 42), photo: normalizeDishPhoto(dish.photo, photoScope),
       options: Array.isArray(dish.options)
         ? [...new Set(dish.options.map(option => text(option, 14)).filter(Boolean))].slice(0, 5) : [],
       icon: ['fish', 'egg', 'leaf', 'bowl', 'pepper', 'flame', 'utensils'].includes(dish.icon) ? dish.icon :
@@ -135,7 +154,7 @@ function notifications(rooms, actor, profile, now) {
   }).sort((a, b) => b.at - a.at).slice(0, 60)
 }
 
-async function run(action, input, actor, store, { now, makeId, subscriptions }) {
+async function run(action, input, actor, store, { now, makeId, subscriptions, photoScope }) {
   if (action === 'signIn') {
     const existing = await store.read('profiles', actor)
     if (existing) return accountView(existing)
@@ -205,7 +224,7 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
       return editProfile(me => {
         const name = text(input.name, 24)
         check(name, '请输入菜单名称')
-        const dishes = normalizeDishes(input.dishes, makeId)
+        const dishes = normalizeDishes(input.dishes, makeId, photoScope)
         const index = input.id ? me.menus.findIndex(menu => menu.id === input.id) : -1
         check(!input.id || index >= 0, '找不到该菜单')
         const existing = me.menus[index]
@@ -223,6 +242,28 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
         me.menus = me.menus.filter(menu => menu.id !== input.id)
         return { data: me, result: true }
       })
+    case 'uploadDishPhoto': {
+      check(/^[a-f0-9]{32}$/.test(photoScope), '图片服务暂不可用')
+      const { content, ext } = decodeDishPhoto(input.content)
+      return store.uploadDishPhoto(photoScope, content, ext)
+    }
+    case 'prepareDishPhoto': {
+      check(/^[a-f0-9]{32}$/.test(photoScope), '图片服务暂不可用')
+      check(['jpg', 'png', 'webp'].includes(input.ext), '请选择 JPG、PNG 或 WebP 图片')
+      return { cloudPath: store.newDishPhotoPath(photoScope, input.ext) }
+    }
+    case 'menuDishPhotos': {
+      const menu = me.menus.find(item => item.id === input.menuId)
+      check(menu, '找不到该菜单')
+      return store.dishPhotoUrls(menu.dishes)
+    }
+    case 'roomDishPhotos': {
+      check(safeId(roomId), '房间编号有误')
+      const room = await store.read('rooms', roomId)
+      requireRoom(room)
+      requireMember(room, actor)
+      return store.dishPhotoUrls(room.dishes)
+    }
     case 'create': {
       const name = text(input.name, 24)
       const menu = me.menus.find(entry => entry.id === input.menuId)
@@ -378,7 +419,7 @@ async function run(action, input, actor, store, { now, makeId, subscriptions }) 
         requireHost(room, actor)
         requireOpen(room, now)
         check(room.dishes.length < 60, '本场饭局最多供应 60 道菜')
-        const [dish] = normalizeDishes([{ ...input.dish, id: makeId() }], makeId)
+        const [dish] = normalizeDishes([{ ...input.dish, id: makeId() }], makeId, photoScope)
         check(!room.dishes.some(item => item.name === dish.name), '本场已有同名菜品')
         room.dishes.push({ ...dish, soldOut: false })
         return { data: room, result: roomView(room, actor, now) }

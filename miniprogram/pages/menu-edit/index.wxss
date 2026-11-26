@@ -1,13 +1,10 @@
+@import "../../styles/dish-presets.wxss";
+
 .edit-card { padding: 18rpx 22rpx; }
-.edit-card .mini { width: 57rpx; height: 57rpx; border-radius: 17rpx; }
+.editor-photo { width: 66rpx; height: 66rpx; border-radius: 17rpx; flex: none; }
 .dish-heading { text-align: left; width: 100% !important; }
 .dish-heading .bold { overflow-wrap: break-word; }
 .dish-fields { border-top: 2rpx solid #e8ecf5; padding-top: 15rpx; margin-top: 15rpx; gap: 12rpx; }
 .dish-fields .field { background: #f3f5fa; box-shadow: none; min-height: 75rpx; }
 .delete { color: #a43e4a; gap: 7rpx; }
 .delete-menu { justify-content: center; }
-.preset-panel { padding: 4rpx 22rpx; }
-.preset-heading { width: 100% !important; min-height: 75rpx; font-weight: 650; }
-.preset-groups { display: flex; flex-direction: column; gap: 17rpx; padding: 12rpx 0 21rpx; border-top: 2rpx solid #edf1f8; }
-.preset-list { display: flex; flex-wrap: wrap; gap: 9rpx; margin-top: 8rpx; }
-.preset-chip { width: auto !important; min-height: 58rpx; padding: 9rpx 13rpx; border-radius: 17rpx; background: #edf2ff; color: #273966; display: inline-flex; align-items: center; gap: 7rpx; font-size: 23rpx; }

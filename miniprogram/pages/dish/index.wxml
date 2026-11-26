@@ -3,6 +3,7 @@
   <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
   <view wx:elif="{{!dish}}" class="state">正在加载菜品…</view>
   <block wx:else>
+    <dish-photo class="detail-photo" src="{{photoUrls[dish.photo]}}" label="{{dish.name}}" />
     <view class="dish-hero">
       <view class="dish-icon"><glyph name="{{dish.icon || 'bowl'}}" size="{{57}}" /></view>
       <view class="grow">

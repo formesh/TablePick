@@ -35,7 +35,10 @@
           <view wx:if="{{expanded === item.category}}" class="supply-dishes">
             <button wx:for="{{item.dishes}}" wx:for-item="dish" wx:key="id" class="dish-option" data-id="{{dish.id}}" bindtap="toggleDish" hover-class="pressed"
               aria-label="{{dish.name + (dish.selected ? '，取消选中' : '，选中')}}">
-              <view class="supply-icon dish-icon {{item.tone}}"><glyph name="{{dish.icon}}" size="{{25}}" /></view>
+              <view class="dish-appearance">
+                <dish-photo class="supply-photo" src="{{photoUrls[dish.photo]}}" label="{{dish.name}}" />
+                <view class="photo-icon"><glyph name="{{dish.icon}}" size="{{17}}" /></view>
+              </view>
               <text class="dish-name">{{dish.name}}</text>
               <view class="choice {{dish.selected ? 'checked' : ''}}"><glyph wx:if="{{dish.selected}}" name="check" size="{{21}}" tone="light" /></view>
             </button>

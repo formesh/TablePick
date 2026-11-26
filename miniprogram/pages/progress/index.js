@@ -1,10 +1,12 @@
 const { countdown, confirm, go, perform, poll, stop, toast } = require('../../utils/ui')
 const { refreshRoom, changeRoom, showResult, deleteRoom } = require('../../utils/room')
 const categories = require('../../utils/categories')
+const { presets, findPreset } = require('../../utils/dish-presets')
+const { selectDishPhoto } = require('../../utils/dish-photos')
 const blankDish = () => ({ name: '', categoryIndex: 0, description: '', optionText: '' })
 
 Page({
-  data: { room: null, management: false, stock: false, addingDish: false, categories, draftDish: blankDish(), dishNameReady: false },
+  data: { room: null, management: false, stock: false, addingDish: false, categories, presets, showPresets: false, draftDish: blankDish(), dishNameReady: false },
   onLoad(options) { this.roomId = options.id },
   onShow() { this.visible = true; this.refresh(); poll(this) },
   onHide() { this.visible = false; stop(this) },
@@ -32,6 +34,16 @@ Page({
   },
   manage() { this.setData({ management: !this.data.management }) },
   toggleAddDish() { this.setData({ addingDish: !this.data.addingDish }) },
+  togglePresets() { this.setData({ showPresets: !this.data.showPresets }) },
+  addPreset(event) {
+    if (this.data.saving || !this.data.room?.isHost) return
+    const preset = findPreset(event.currentTarget.dataset.name)
+    if (!preset) return
+    if (this.data.room.dishes.some(dish => dish.name === preset.name)) return toast('本场已供应这道菜')
+    const { category, ...draft } = preset
+    this.setData({ draftDish: { ...draft, categoryIndex: categories.indexOf(category) },
+      dishNameReady: true, showPresets: false })
+  },
   editDish(event) {
     const { field } = event.currentTarget.dataset
     const value = event.detail.value
@@ -40,15 +52,22 @@ Page({
     this.setData(patch)
   },
   setDishCategory(event) { this.setData({ 'draftDish.categoryIndex': Number(event.detail.value) }) },
+  choosePhoto() {
+    return perform(this, async () => {
+      const picked = await selectDishPhoto()
+      if (picked) this.setData({ 'draftDish.photo': picked.photo, 'draftDish.previewPhoto': picked.preview })
+    })
+  },
+  useDefaultPhoto() { this.setData({ 'draftDish.photo': '', 'draftDish.previewPhoto': '' }) },
   addDish() {
     if (!this.data.room?.isHost || !this.data.dishNameReady) return
     return perform(this, async () => {
-      const { name, categoryIndex, description, optionText } = this.data.draftDish
+      const { name, categoryIndex, description, optionText, icon, photo } = this.data.draftDish
       const options = optionText.split(/[、，,]/).map(value => value.trim()).filter(Boolean)
       this.updateRoom(await changeRoom(this, 'addDish', { dish: {
-        name, category: categories[categoryIndex], description, options
+        name, category: categories[categoryIndex], description, options, icon, photo
       } }))
-      this.setData({ draftDish: blankDish(), dishNameReady: false, addingDish: false })
+      this.setData({ draftDish: blankDish(), dishNameReady: false, addingDish: false, showPresets: false })
       toast('已加入本场菜单')
     })
   },

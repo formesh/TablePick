@@ -1,13 +1,13 @@
 const CATEGORIES = require('../../utils/categories')
 const { countdown, invitePath, go, perform, poll, stop } = require('../../utils/ui')
 const { refreshRoom, changeRoom, showResult } = require('../../utils/room')
+const { refreshDishPhotos } = require('../../utils/dish-photos')
 
 const itemKey = (id, option) => id + ':' + option
 const dishItems = dish => dish.options.length ? dish.options : ['默认做法']
-const toneOf = dish => ({ fish: 'amber', egg: 'rose', leaf: 'lilac' }[dish.icon] || 'blue')
 
 Page({
-  data: { room: null, categories: [], category: '全部', tab: 'order', visibleDishes: [], total: 0 },
+  data: { room: null, categories: [], category: '全部', tab: 'order', visibleDishes: [], total: 0, photoUrls: {} },
   onLoad(options) {
     this.roomId = options.id
     this.draft = []
@@ -32,6 +32,7 @@ Page({
     const categories = ['全部', ...CATEGORIES.filter(category => room.dishes.some(dish => dish.category === category))]
     const category = categories.includes(this.data.category) ? this.data.category : '全部'
     this.setData({ room, categories, category, deadlineText: room.autoClose ? countdown(room.deadline) : '由发起人手动收单' })
+    refreshDishPhotos(this, 'room', room.id, room.dishes)
     this.updateDishes()
   },
   updateDishes() {
@@ -41,7 +42,7 @@ Page({
     const visibleDishes = room.dishes.filter(dish => category === '全部' || dish.category === category).map(dish => {
       const choices = dishItems(dish)
       const option = this.variants[dish.id] || choices.find(value => counts.has(itemKey(dish.id, value))) || choices[0]
-      return { ...dish, tone: toneOf(dish), choices, option, optionIndex: choices.indexOf(option),
+      return { ...dish, choices, option, optionIndex: choices.indexOf(option),
         count: counts.get(itemKey(dish.id, option)) || 0,
         total: choices.reduce((sum, value) => sum + (counts.get(itemKey(dish.id, value)) || 0), 0)
       }

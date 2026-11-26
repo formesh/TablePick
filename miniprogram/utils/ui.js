@@ -87,8 +87,8 @@ function stop(page) {
   if (page.pollTimer) clearInterval(page.pollTimer)
   page.pollTimer = null
 }
-function confirm(title, content) {
-  return new Promise(resolve => wx.showModal({ title, content, confirmColor: '#2F80FF',
+function confirm(title, content, button = {}) {
+  return new Promise(resolve => wx.showModal({ title, content, confirmColor: '#2F80FF', ...button,
     success: response => resolve(response.confirm), fail: () => resolve(false) }))
 }
 

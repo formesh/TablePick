@@ -22,7 +22,10 @@ const groups = [
   ]]
 ]
 
-module.exports = groups.map(([category, dishes]) => ({
+const presets = groups.map(([category, dishes]) => ({
   category,
   dishes: dishes.map(([name, icon, description, optionText = '']) => ({ name, category, icon, description, optionText }))
 }))
+const byName = new Map(presets.flatMap(group => group.dishes.map(dish => [dish.name, dish])))
+
+module.exports = { presets, findPreset: name => byName.get(name) }

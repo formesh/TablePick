@@ -17,3 +17,6 @@
 .manage-panel .add-dish-toggle { background: #eaf1ff; min-height: 68rpx; color: #173f82; }
 .add-dish-form { gap: 12rpx; padding: 16rpx 0; border-top: 2rpx solid #e8edf7; }
 .add-dish-form .field { background: #f2f5fa; box-shadow: none; min-height: 70rpx; }
+@import "../../styles/dish-presets.wxss";
+.add-dish-form .preset-panel { box-shadow: none; border-color: #e6edf8; }
+.add-dish-photo { width: 75rpx; height: 75rpx; border-radius: 17rpx; flex: none; }

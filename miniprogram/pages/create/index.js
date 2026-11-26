@@ -1,6 +1,7 @@
 const { api } = require('../../utils/api')
 const CATEGORIES = require('../../utils/categories')
 const { day, clock, go, load, perform } = require('../../utils/ui')
+const { refreshDishPhotos } = require('../../utils/dish-photos')
 
 const categoryAppearance = {
   热菜: { icon: 'flame', tone: 'warm' },
@@ -14,7 +15,7 @@ const firstAvailableCategory = menu => menu
   : ''
 
 Page({
-  data: { name: '', nameReady: false, menus: [], menuIndex: 0, groups: [], selectedIds: [], expanded: '', date: '', time: '', minDate: '', autoClose: true },
+  data: { name: '', nameReady: false, menus: [], menuIndex: 0, groups: [], selectedIds: [], expanded: '', date: '', time: '', minDate: '', autoClose: true, photoUrls: {} },
   onLoad(options) {
     this.initialMenu = options.id
     const now = Date.now()
@@ -37,6 +38,7 @@ Page({
       const expanded = sameMenu ? this.data.expanded : firstAvailableCategory(menu)
       this.setData({ menus, label, menuIndex: index, menu: menu || null, expanded })
       this.setSelection(selected)
+      if (menu) refreshDishPhotos(this, 'menu', menu.id, menu.dishes)
     })
   },
   setSelection(selectedIds) {
@@ -56,6 +58,7 @@ Page({
     if (!menu) return
     this.setData({ menuIndex, menu, expanded: firstAvailableCategory(menu) })
     this.setSelection(menu.dishes.map(dish => dish.id))
+    refreshDishPhotos(this, 'menu', menu.id, menu.dishes)
   },
   toggleGroup(event) {
     const category = event.currentTarget.dataset.category

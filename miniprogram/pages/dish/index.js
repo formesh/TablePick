@@ -1,8 +1,9 @@
 const { api } = require('../../utils/api')
 const { load } = require('../../utils/ui')
+const { refreshDishPhotos } = require('../../utils/dish-photos')
 
 Page({
-  data: { room: null, dish: null },
+  data: { room: null, dish: null, photoUrls: {} },
   onLoad({ id, dishId }) {
     this.roomId = id
     this.dishId = dishId
@@ -20,6 +21,7 @@ Page({
       const status = room.closedAt ? '已收单' : dish.soldOut ? '已售罄' : '本场供应'
       const methods = dish.options.length ? dish.options : ['默认做法']
       this.setData({ room: { id: room.id, name: room.name, closedAt: room.closedAt }, dish, status, methods })
+      refreshDishPhotos(this, 'room', room.id, [dish])
     })
   },
   returnToRoom() {

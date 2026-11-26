@@ -1,3 +1,4 @@
+<import src="../../templates/dish-presets.wxml" />
 <top-bar title="大家点的" subtitle="{{room.name}}">
   <button slot="action" wx:if="{{room.isHost}}" class="icon-button" bindtap="manage" aria-label="房间管理"><glyph name="more" size="{{36}}" /></button>
 </top-bar>
@@ -16,6 +17,12 @@
       <button class="action-button secondary add-dish-toggle" disabled="{{saving}}" bindtap="toggleAddDish"><glyph name="{{addingDish ? 'minus' : 'plus'}}" size="{{27}}" tone="blue" />{{addingDish ? '收起加菜表单' : '临时加菜'}}</button>
       <view wx:if="{{addingDish}}" class="flow add-dish-form">
         <text class="small dim">新菜只加入本场饭局。</text>
+        <template is="dish-presets" data="{{presets, showPresets, presetDisabled: saving}}" />
+        <view class="flex photo-controls">
+          <dish-photo class="add-dish-photo" src="{{draftDish.previewPhoto}}" />
+          <button class="link" bindtap="choosePhoto" disabled="{{saving}}">{{draftDish.photo ? '更换菜品图' : '上传菜品图'}}</button>
+          <button wx:if="{{draftDish.photo}}" class="link" bindtap="useDefaultPhoto" disabled="{{saving}}">使用默认图</button>
+        </view>
         <view class="field"><input value="{{draftDish.name}}" placeholder="菜名" maxlength="24" aria-label="菜名" data-field="name" bindinput="editDish" /></view>
         <picker mode="selector" range="{{categories}}" value="{{draftDish.categoryIndex}}" bindchange="setDishCategory">
           <view class="field between"><text>{{categories[draftDish.categoryIndex]}}</text><glyph name="chevron-down" size="{{25}}" tone="muted" /></view>
@@ -24,7 +31,9 @@
         <view class="field"><input value="{{draftDish.optionText}}" placeholder="可选做法，例如：微辣、不辣" maxlength="75" aria-label="可选做法" data-field="optionText" bindinput="editDish" /></view>
         <button class="action-button primary" loading="{{saving}}" disabled="{{saving || !dishNameReady}}" bindtap="addDish">加入本场菜单</button>
       </view>
-      <button class="link danger-link" disabled="{{saving}}" bindtap="deleteRoom"><glyph name="trash" size="{{26}}" />删除饭局</button>
+      <view class="delete-actions">
+        <button class="link danger-link" disabled="{{saving}}" bindtap="deleteRoom" hover-class="pressed"><glyph name="trash" size="{{24}}" tone="danger" />删除饭局</button>
+      </view>
     </view>
     <view class="card member-list">
       <view class="member flex" wx:for="{{room.members}}" wx:key="key">

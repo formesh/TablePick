@@ -9,6 +9,12 @@ function fixture() {
   let now = 1800000000000
   const store = {
     read: async (kind, id) => clone(data[kind].get(id)),
+    newDishPhotoPath: (scope, ext) => 'dish-photos/' + scope + '/' + 'd'.repeat(64) + '.' + ext,
+    uploadDishPhoto: async (scope, content, ext) => ({
+      photo: 'cloud://unit-env.unit-bucket/dish-photos/' + scope + '/' + 'c'.repeat(64) + '.' + ext
+    }),
+    dishPhotoUrls: async dishes => Object.fromEntries(dishes.filter(dish => dish.photo)
+      .map(dish => [dish.photo, 'https://storage.example.test/dish'])),
     roomsFor: async actor => clone([...data.rooms.values()].filter(room => room.memberIds.includes(actor))),
     async edit(kind, id, change) {
       const { data: update, result } = change(clone(data[kind].get(id)))
@@ -17,7 +23,8 @@ function fixture() {
     }
   }
   const call = (action, input = {}, actor = 'host') => run(action, input, actor, store, {
-    now: now++, makeId: () => 'new-' + ++sequence, subscriptions: true
+    now: now++, makeId: () => 'new-' + ++sequence, subscriptions: true,
+    photoScope: (actor === 'host' ? 'a' : 'b').repeat(32)
   })
   const advance = elapsed => { now += elapsed }
   const register = (actor, nickname) => call('register', { nickname }, actor)
@@ -219,4 +226,39 @@ test('发起人临时加菜后成员可点单，原菜单和已收单饭局保�
   await assert.rejects(call('addDish', { roomId, dish: { ...dish, name: '紫菜汤' } }), /已收单/)
   const result = await call('result', { roomId })
   assert.equal(result.totals.dishes.find(entry => entry.id === added.id).count, 2)
+})
+
+test('菜品图片随菜单快照共享，只有房间成员可以读取图片地址', async () => {
+  const { call, create, join, register } = fixture()
+  const existing = await create()
+  const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aIxkAAAAASUVORK5CYII='
+  const { photo } = await call('uploadDishPhoto', { content: png })
+  await assert.rejects(call('uploadDishPhoto', { content: 'YWJj' }), /图片/)
+  const [menu] = await call('menus')
+  const updated = await call('saveMenu', { ...menu, dishes: [{ ...menu.dishes[0], photo }, menu.dishes[1]] })
+  const room = await call('create', { name: '有图的饭局', menuId: updated.id, dishIds: updated.dishes.map(item => item.id),
+    deadline: 1800003600000 })
+  assert.equal(room.dishes[0].photo, photo)
+  assert.equal(room.dishes[1].photo, '')
+  assert.equal((await call('room', { roomId: existing.id })).dishes[0].photo, '')
+  await register('guest', '小周')
+  await assert.rejects(call('roomDishPhotos', { roomId: room.id }, 'guest'), /加入/)
+  await assert.rejects(call('saveMenu', { name: '其他菜单', dishes: [{ ...updated.dishes[0], photo }] }, 'guest'), /图片无效/)
+  await join(room, '小周', 'guest')
+  assert.ok((await call('roomDishPhotos', { roomId: room.id }, 'guest'))[photo])
+  assert.ok((await call('menuDishPhotos', { menuId: updated.id }))[photo])
+  const temporary = await call('addDish', { roomId: room.id, dish: { name: '紫菜汤', category: '汤品', photo } })
+  assert.equal(temporary.dishes.at(-1).photo, photo)
+})
+
+test('图片直传路径仅为已注册用户生成，并使用该用户的照片目录', async () => {
+  const { call, register } = fixture()
+  await assert.rejects(call('prepareDishPhoto', { ext: 'jpg' }), { code: 'ACCOUNT_REQUIRED' })
+  await register('host', '发起人')
+  await assert.rejects(call('prepareDishPhoto', { ext: '../jpg' }), /图片/)
+  const { cloudPath } = await call('prepareDishPhoto', { ext: 'png' })
+  assert.equal(cloudPath, 'dish-photos/' + 'a'.repeat(32) + '/' + 'd'.repeat(64) + '.png')
+  const fileId = 'cloud://unit-env.unit-bucket/' + cloudPath
+  const menu = await call('saveMenu', { name: '菜单', dishes: [{ name: '鱼', category: '热菜', photo: fileId }] })
+  assert.equal(menu.dishes[0].photo, fileId)
 })

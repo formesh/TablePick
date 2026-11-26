@@ -1,0 +1,1 @@
+<image class="dish-image" src="{{imageSource}}" mode="aspectFill" binderror="fallback" aria-label="{{label}}" />

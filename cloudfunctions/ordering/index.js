@@ -6,6 +6,7 @@ const { subscription, deliver } = require('./subscription')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database({ throwOnNotFound: false })
 const collections = { rooms: 'ordering_rooms', profiles: 'ordering_profiles' }
+const digest = value => crypto.createHash('sha256').update(value).digest('hex')
 
 function ref(database, kind, id) {
   return database.collection(collections[kind]).doc(id)
@@ -23,6 +24,26 @@ async function read(database, kind, id) {
 
 const store = {
   read: (kind, id) => read(db, kind, id),
+  newDishPhotoPath(scope, ext) {
+    return 'dish-photos/' + scope + '/' + crypto.randomBytes(32).toString('hex') + '.' + ext
+  },
+  async uploadDishPhoto(scope, content, ext) {
+    const cloudPath = 'dish-photos/' + scope + '/' + digest(content) + '.' + ext
+    const { fileID } = await cloud.uploadFile({ cloudPath, fileContent: content })
+    return { photo: fileID }
+  },
+  async dishPhotoUrls(dishes) {
+    const photos = [...new Set(dishes.map(dish => dish.photo).filter(Boolean))]
+    const urls = {}
+    for (let start = 0; start < photos.length; start += 30) {
+      const fileList = photos.slice(start, start + 30).map(fileID => ({ fileID, maxAge: 3600 }))
+      const response = await cloud.getTempFileURL({ fileList })
+      for (const file of response.fileList || []) {
+        if (file.status === 0 && file.tempFileURL) urls[file.fileID] = file.tempFileURL
+      }
+    }
+    return urls
+  },
   edit(kind, id, change) {
     return db.runTransaction(async transaction => {
       const prior = await read(transaction, kind, id)
@@ -51,7 +72,8 @@ exports.main = async (event = {}) => {
   if (!OPENID || APPID !== 'wxfc680f6cc3c547a0') return { ok: false, message: '请从当前小程序访问' }
   try {
     let data = await run(event.action, event.input || {}, OPENID, store, {
-      now: Date.now(), makeId: () => crypto.randomBytes(16).toString('hex'), subscriptions: Boolean(subscription)
+      now: Date.now(), makeId: () => crypto.randomBytes(16).toString('hex'), subscriptions: Boolean(subscription),
+      photoScope: digest(OPENID).slice(0, 32)
     })
     if (event.action === 'submit' && data.deliveries) {
       const { deliveries, ...room } = data

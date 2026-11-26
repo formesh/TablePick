@@ -29,7 +29,7 @@
         <button wx:for="{{categories}}" wx:key="*this" class="category {{category === item ? 'category-active' : ''}}" data-name="{{item}}" bindtap="selectCategory">{{item}}</button>
       </scroll-view>
       <view wx:for="{{visibleDishes}}" wx:key="id" class="card dish {{item.total ? 'ordered' : ''}} {{item.soldOut ? 'sold-out' : ''}}">
-        <view class="tile {{item.tone}}"><glyph name="{{item.icon}}" size="{{47}}" /></view>
+        <dish-photo class="dish-thumb" src="{{photoUrls[item.photo]}}" label="{{item.name}}" />
         <view class="grow dish-text">
           <view class="dish-name">{{item.name}}</view>
           <view class="dish-description" wx:if="{{item.description}}">{{item.description}}</view>
