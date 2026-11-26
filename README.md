@@ -1,4 +1,4 @@
-# 一起点菜
+# TablePick
 
 微信原生小程序。首页采用 Pencil 设计稿的 Apple 深度版。
 

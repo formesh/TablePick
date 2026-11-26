@@ -20,6 +20,6 @@ Page({
   },
   onShareAppMessage() {
     const room = this.data.room
-    return { title: room ? room.host + '邀请你一起点菜 · ' + room.name : '一起点菜', path: invitePath(room) }
+    return { title: room ? room.host + '邀请你一起点菜 · ' + room.name : 'TablePick', path: invitePath(room) }
   }
 })

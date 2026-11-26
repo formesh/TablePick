@@ -27,7 +27,7 @@ Page({
   },
   onShareAppMessage() {
     const room = this.data.room
-    if (!room || !room.resultToken) return { title: '一起点菜', path: '/pages/home/index' }
+    if (!room || !room.resultToken) return { title: 'TablePick', path: '/pages/home/index' }
     return { title: room.name + ' · 最终清单',
       path: '/pages/result/index?id=' + encodeURIComponent(room.id) + '&token=' + encodeURIComponent(room.resultToken) }
   }

@@ -13,6 +13,7 @@
     },
     "useCompilerPlugins": false
   },
+  "projectname": "TablePick",
   "compileType": "miniprogram",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",

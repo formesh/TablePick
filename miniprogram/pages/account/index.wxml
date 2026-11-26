@@ -1,7 +1,7 @@
 <view class="shell account" style="padding-top:{{top}}px">
   <view class="account-intro">
     <view class="account-art"><glyph name="utensils" size="{{64}}" tone="violet" /></view>
-    <view class="account-title">{{registering ? '注册一起点菜' : '一起点菜'}}</view>
+    <view class="account-title">TablePick</view>
     <view class="account-copy">{{registering ? '使用微信头像和昵称，方便好友认出你' : '登录后查看你的菜单和饭局'}}</view>
   </view>
   <view class="card card-pad flow account-form" wx:if="{{registering}}">
