@@ -1,0 +1,59 @@
+<view class="shell tab-shell flow home" style="padding-top:{{top}}px">
+  <view class="home-heading">
+    <view class="between">
+      <text class="home-date">{{date}}</text>
+      <button class="icon-button bell" bindtap="messages" aria-label="消息通知" hover-class="pressed">
+        <glyph name="bell" size="{{35}}" /><view wx:if="{{unread}}" class="bell-dot"></view>
+      </button>
+    </view>
+    <view class="home-title">今晚，和谁一起吃？</view>
+    <view class="friends flex" wx:if="{{companions.length}}">
+      <view class="friends-list"><text wx:for="{{companions}}" wx:key="index" class="friend friend-{{index}}">{{item}}</text></view>
+      <text>{{companions.length}} 位好友一起点过</text>
+    </view>
+  </view>
+  <view class="hero">
+    <view class="between hero-body">
+      <view class="grow">
+        <view class="hero-label"><view class="hero-dot"></view>一起点 · 实时同步</view>
+        <view class="hero-title">开一桌，<text class="hero-break"></text>把今晚留给朋友</view>
+        <view class="hero-copy">边聊边选，菜单自动汇总</view>
+      </view>
+      <view class="menu-art" aria-hidden="true"><view class="menu-layer layer-back"></view><view class="menu-layer layer-mid"></view><view class="menu-layer layer-front"><glyph name="utensils" size="{{53}}" tone="light" /></view></view>
+    </view>
+    <button class="hero-button" bindtap="create" hover-class="pressed">
+      <view class="flex"><glyph name="sparkles" size="{{36}}" tone="peach" /><text>创建今晚的饭局</text></view>
+      <view class="arrow"><glyph name="arrow-up-right" size="{{27}}" tone="light" /></view>
+    </button>
+  </view>
+  <view class="segment home-segment">
+    <button class="{{selected === 0 ? 'chosen' : ''}}" data-index="0" bindtap="switchMode">
+      <glyph name="radio" size="{{29}}" tone="{{selected === 0 ? 'light' : 'muted'}}" />我发起的<text class="segment-count" wx:if="{{hosted}}">{{hosted}}</text>
+    </button>
+    <button class="{{selected === 1 ? 'chosen' : ''}}" data-index="1" bindtap="switchMode">
+      <glyph name="users" size="{{29}}" tone="{{selected === 1 ? 'light' : 'muted'}}" />我参与的
+    </button>
+  </view>
+  <view class="state card" wx:if="{{error}}">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <view wx:elif="{{loading && !cards.length}}" class="state">正在加载饭局…</view>
+  <view wx:elif="{{!cards.length}}" class="state card">{{selected === 0 ? '还没有发起饭局。' : '收到好友的微信邀请后，可以在这里查看饭局。'}}<button wx:if="{{selected === 0}}" class="link" bindtap="create">创建第一场饭局</button></view>
+  <block wx:else>
+    <button wx:for="{{cards}}" wx:key="id" data-id="{{item.id}}" bindtap="openRoom" hover-class="pressed" class="room-tile {{item.closedAt ? 'closed-room' : 'dark-card live-room'}}">
+      <block wx:if="{{item.closedAt}}">
+        <view class="between">
+          <view class="ticket"><text>{{item.month}}</text><text>{{item.dayNumber}}</text></view>
+          <view class="grow"><view class="between"><text class="closed-title">{{item.name}}</text><text class="badge">✓ 已汇总</text></view>
+            <view class="closed-meta">{{item.memberCount}} 人 · 共 {{item.total}} 份</view>
+          </view>
+        </view>
+        <view class="between closed-line"><view class="flex"><glyph name="list" size="{{24}}" tone="muted" />清单已生成</view><view class="flex result-link">查看清单 <glyph name="chevron-right" size="{{22}}" tone="violet" /></view></view>
+      </block>
+      <block wx:else>
+        <view class="between live-status"><view class="flex"><view class="live-dot"></view>{{item.stage}}</view><text>{{item.deadlineLabel}}</text></view>
+        <view class="between room-heading"><view class="grow"><view class="room-title">{{item.name}}</view><view class="live-meta">{{item.memberCount}} 人 · {{item.confirmed}} 人已确认</view></view><view class="arrow live-arrow"><glyph name="arrow-up-right" size="{{32}}" tone="light" /></view></view>
+        <view class="between live-progress"><text>确认进度</text><text>{{item.confirmed}} / {{item.memberCount}}</text></view>
+        <view class="progress-track"><view style="width:{{item.percent}}%"></view></view>
+      </block>
+    </button>
+  </block>
+</view>

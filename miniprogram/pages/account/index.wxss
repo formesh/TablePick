@@ -1,0 +1,7 @@
+.account-intro { text-align: center; margin: 79rpx 0 69rpx; }
+.account-art { width: 153rpx; height: 153rpx; border: 2rpx solid #fff; border-radius: 47rpx; background: linear-gradient(145deg,#ffe0cc,#e3dbff 63%,#dfeaff); box-shadow: 0 18rpx 33rpx #4d63a126; margin: 0 auto 33rpx; display: flex; align-items: center; justify-content: center; }
+.account-title { font-size: 57rpx; font-weight: 780; letter-spacing: -1rpx; }
+.account-copy { color: #535d6d; margin-top: 11rpx; font-size: 26rpx; }
+.account-form { max-width: 650rpx; margin: 0 auto; }
+.account-form .field { background: #f3f5fa; box-shadow: none; }
+.account-hint { text-align: center; }

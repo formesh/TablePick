@@ -1,0 +1,8 @@
+.intro { text-align: center; padding: 12rpx 0 22rpx; }
+.invite-art { width: 145rpx; height: 145rpx; border: 2rpx solid white; border-radius: 47rpx; background: linear-gradient(142deg,#ffe0cc,#e3dbff 66%,#dfeaff); box-shadow: 0 16rpx 28rpx #4d63a132; margin: 0 auto 26rpx; display:flex; align-items:center; justify-content:center; }
+.invite-title { font-size: 47rpx; font-weight: 780; margin-bottom: 15rpx; }
+.invite-card { border-radius: 41rpx; padding: 27rpx 35rpx; }
+.invite-card .flex { font-size: 25rpx; color: #e4e8f4; }
+.room-name { font-size: 35rpx; font-weight: 730; word-break: break-word; }
+.room-note { font-size: 23rpx; color: #aeb8d4; margin-top: 6rpx; }
+.invite-badge { padding: 7rpx 17rpx; border-radius: 22rpx; background: #ff9f0a; color: #251801; font-size: 22rpx; font-weight: 730; }

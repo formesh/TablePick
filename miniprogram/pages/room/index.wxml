@@ -1,0 +1,60 @@
+<top-bar title="{{room.name || '多人点菜'}}">
+  <button slot="action" wx:if="{{room.inviteToken}}" class="icon-button" bindtap="invite" aria-label="邀请好友"><glyph name="share" size="{{35}}" /></button>
+</top-bar>
+<view class="shell flow room-shell {{tab === 'order' && room ? 'with-actions' : ''}}">
+  <view class="card state" wx:if="{{error}}">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <view wx:elif="{{loading && !room}}" class="state">正在加载房间…</view>
+  <block wx:elif="{{room && !room.closedAt}}">
+    <view class="room-progress">
+      <view class="between">
+        <view><view class="bold">{{room.memberCount}} 人中已有 {{room.confirmed}} 人确认</view><view class="tiny dim">{{countdown}}{{room.autoClose ? '' : ' · 手动收单'}}</view></view>
+        <view class="flex member-icons"><view wx:for="{{room.members}}" wx:key="key" wx:if="{{index < 3}}" class="avatar {{item.tone}}">{{item.avatar}}</view></view>
+      </view>
+      <view class="progress-track"><view style="width:{{room.percent}}%"></view></view>
+    </view>
+    <view class="segment">
+      <button class="{{tab === 'order' ? 'chosen' : ''}}" data-tab="order" bindtap="selectTab">选菜</button>
+      <button data-tab="progress" bindtap="selectTab">大家点的</button>
+      <button class="{{tab === 'members' ? 'chosen' : ''}}" data-tab="members" bindtap="selectTab">成员 {{room.memberCount}}</button>
+    </view>
+    <block wx:if="{{tab === 'members'}}">
+      <view class="card card-pad flex" wx:for="{{room.members}}" wx:key="key">
+        <view class="avatar {{item.tone}}">{{item.avatar}}</view>
+        <view class="grow"><view class="bold">{{item.name}}{{item.isMe ? '（我）' : ''}}</view><view class="small dim">{{item.isHost ? '发起人 · ' : ''}}{{item.itemsLabel}}</view></view>
+        <text class="badge {{item.state === 'pending' ? 'amber' : ''}}">{{item.stateText}}</text>
+      </view>
+    </block>
+    <block wx:else>
+      <scroll-view class="categories" scroll-x enable-flex>
+        <button wx:for="{{categories}}" wx:key="*this" class="category {{category === item ? 'category-active' : ''}}" data-name="{{item}}" bindtap="selectCategory">{{item}}</button>
+      </scroll-view>
+      <view wx:for="{{visibleDishes}}" wx:key="id" class="card dish {{item.total ? 'ordered' : ''}} {{item.soldOut ? 'sold-out' : ''}}">
+        <view class="tile {{item.tone}}"><glyph name="{{item.icon}}" size="{{47}}" /></view>
+        <view class="grow dish-text">
+          <view class="dish-name">{{item.name}}</view>
+          <view class="dish-description" wx:if="{{item.description}}">{{item.description}}</view>
+          <text class="badge amber" wx:if="{{item.soldOut}}">已售罄</text>
+          <picker wx:elif="{{item.choices.length > 1}}" mode="selector" range="{{item.choices}}" value="{{item.optionIndex}}" data-id="{{item.id}}" bindchange="chooseOption">
+            <view class="badge choice-tag">{{item.option}}<glyph name="chevron-down" size="{{17}}" tone="violet" /><text wx:if="{{item.total > item.count}}">共 {{item.total}} 份</text></view>
+          </picker>
+          <text class="badge" wx:elif="{{item.option !== '默认做法'}}">{{item.option}}</text>
+        </view>
+        <view class="quantity" wx:if="{{!item.soldOut}}">
+          <button class="adjust remove" data-id="{{item.id}}" data-step="-1" bindtap="changeCount" disabled="{{!item.count || room.myState !== 'pending' || saving}}" aria-label="减少份数"><glyph name="minus" size="{{28}}" /></button>
+          <text>{{item.count}}</text>
+          <button class="adjust add" data-id="{{item.id}}" data-step="1" bindtap="changeCount" disabled="{{item.count >= 20 || room.myState !== 'pending' || saving}}" aria-label="增加份数"><glyph name="plus" size="{{28}}" tone="light" /></button>
+        </view>
+      </view>
+    </block>
+  </block>
+</view>
+<view wx:if="{{room && !room.closedAt && !error && tab === 'order'}}" class="order-footer bottom-actions">
+  <block wx:if="{{room.myState === 'pending'}}">
+    <button class="action-button secondary skip-order" disabled="{{saving}}" bindtap="submit" data-state="skipped">这次不点</button>
+    <button class="action-button confirm-order" disabled="{{saving || !total}}" bindtap="submit" data-state="confirmed"><glyph name="check" size="{{31}}" tone="peach" />已点好 · 共 {{total}} 份</button>
+  </block>
+  <block wx:else>
+    <button class="action-button secondary skip-order" bindtap="selectTab" data-tab="progress">看进度</button>
+    <button class="action-button confirm-order" disabled="{{saving}}" bindtap="submit" data-state="pending"><glyph name="edit" size="{{28}}" tone="peach" />{{room.myState === 'skipped' ? '重新选菜' : '已确认 · 修改点单'}}</button>
+  </block>
+</view>

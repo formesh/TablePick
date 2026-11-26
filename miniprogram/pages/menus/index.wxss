@@ -1,0 +1,6 @@
+.menu-card { padding: 25rpx 30rpx; border-radius: 43rpx; }
+.menu-card .bottom-actions { margin-top: 21rpx; gap: 17rpx; }
+.item-name { font-size: 33rpx; font-weight: 730; word-break: break-word; }
+.detail { margin-top: 5rpx; }
+.more-button { width: 56rpx; height: 60rpx; display: flex; align-items: center; justify-content: center; }
+.view-button { background: #efedf3; color: #1c1c1e; box-shadow: none; }

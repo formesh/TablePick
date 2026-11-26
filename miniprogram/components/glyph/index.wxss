@@ -1,0 +1,8 @@
+:host { display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.glyph { display: block; flex: none; }
+.light { filter: brightness(0) invert(1); }
+.muted { opacity: .57; }
+.soft { filter: brightness(0) invert(1); opacity: .63; }
+.blue { filter: invert(42%) sepia(83%) saturate(1933%) hue-rotate(199deg) brightness(100%); }
+.violet { filter: invert(32%) sepia(57%) saturate(2409%) hue-rotate(227deg); }
+.peach { filter: invert(77%) sepia(28%) saturate(672%) hue-rotate(321deg) brightness(105%); }

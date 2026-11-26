@@ -1,0 +1,17 @@
+<view class="shell flow join">
+  <view wx:if="{{error}}" class="card state">{{error}}<button class="link" bindtap="refresh">重试</button><button class="link" bindtap="home">返回</button></view>
+  <view wx:elif="{{loading}}" class="state">正在打开邀请…</view>
+  <block wx:elif="{{room}}">
+    <view class="intro"><view class="invite-art"><glyph name="utensils" size="{{62}}" tone="violet" /></view><view class="invite-title">{{room.host}}邀请你一起点菜</view><view class="small dim">加入后可以选择菜品，也能看到大家点了什么</view></view>
+    <view class="dark-card card-pad flow invite-card">
+      <view class="between"><view class="grow"><view class="room-name">{{room.name}}</view><view class="room-note">{{room.menuName}} · {{room.dishesCount}} 道供应</view></view><text class="invite-badge">{{room.closedAt ? '已收单' : '点菜中'}}</text></view>
+      <view class="flex"><glyph name="clock" size="{{27}}" tone="soft" />{{deadline}}</view>
+      <view class="flex"><glyph name="users" size="{{27}}" tone="soft" />已有 {{room.memberCount}} 人加入</view>
+      <view class="flex" wx:if="{{!room.closedAt}}"><glyph name="share" size="{{27}}" tone="soft" />邀请可以继续转发</view>
+    </view>
+    <view wx:if="{{!room.isMember && !room.closedAt}}"><text class="field-label">加入后显示的昵称</text><view class="field"><input value="{{nickname}}" placeholder="例如：小王" aria-label="加入后显示的昵称" maxlength="32" bindinput="inputName" /><glyph name="edit" size="{{30}}" tone="muted" /></view></view>
+    <button class="action-button" wx:if="{{room.isMember || !room.closedAt}}" disabled="{{saving}}" bindtap="enter" hover-class="pressed">{{room.closedAt ? '查看最终清单' : room.isMember ? '进入点菜房间' : '确认加入并开始点菜'}} <glyph name="arrow-right" size="{{30}}" tone="light" /></button>
+    <button class="action-button secondary" wx:else bindtap="home">房间已收单 · 返回首页</button>
+    <view class="small dim join-hint" wx:if="{{!room.closedAt}}">再次进入时会自动恢复你的点菜记录</view>
+  </block>
+</view>

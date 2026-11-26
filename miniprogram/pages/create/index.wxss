@@ -1,0 +1,16 @@
+.creation { gap: 22rpx; }
+.steps { display: flex; gap: 10rpx; margin-bottom: 5rpx; }
+.step { flex: 1; padding-top: 11rpx; border-top: 5rpx solid #cbd2de; color: #6e7480; font-size: 21rpx; }
+.step.active { border-top-color: #2f80ff; color: #1768dd; font-weight: 650; }
+.supply { padding: 8rpx 20rpx; border-radius: 25rpx; background: linear-gradient(150deg,#efecff,#e8f0ff); }
+.supply-count { color: #1768dd; font-size: 23rpx; }
+.group-expand { flex: 1; min-height: 59rpx; text-align: left; }
+.choice { width: 36rpx; height: 36rpx; flex: none; border: 2rpx solid #2f80ff; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.choice.checked { border-color: transparent; }
+.supply-dishes { padding: 0 12rpx 7rpx; }
+.dish-option { padding: 9rpx 0; min-height: 57rpx; width: 100%; color: #3f4c6d; font-size: 25rpx; }
+.deadline picker { flex: 1; }
+.deadline picker + picker { border-left: 2rpx solid #e4e7f1; padding-left: 18rpx; }
+.deadline picker view { display: flex; justify-content: space-between; align-items: center; min-height: 48rpx; }
+.new-menu { width: 100%; }
+.creation switch { transform: scale(.82); transform-origin: right; }

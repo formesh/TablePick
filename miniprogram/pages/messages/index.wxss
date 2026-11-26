@@ -1,0 +1,16 @@
+.message-banner { background: #12151c; padding: 29rpx 30rpx; border-radius: 40rpx; }
+.banner-title { font-size: 33rpx; font-weight: 730; }
+.summary { color: #c4cada; margin-top: 5rpx; }
+.settings { background: #ffffff19; min-width: 91rpx; min-height: 56rpx; }
+.prefs { margin-top: 18rpx; }
+.prefs button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6rpx; min-height: 63rpx; border-radius: 20rpx; border: 2rpx solid #ffffff25; font-size: 22rpx; color: #bec5d4; }
+.prefs button.enabled { color: #fff; background: #2f80ff; border-color: #2f80ff; }
+.message-group { gap: 15rpx; }
+.message-group .section-title { margin-top: 6rpx; }
+.message-row { padding: 20rpx 22rpx; text-align: left; width: 100% !important; min-height: 112rpx; border-radius: 34rpx; gap: 16rpx; }
+.message-row .tile { width: 70rpx; height: 70rpx; border-radius: 50%; }
+.message-row.unread { border-color: #2f80ff; }
+.message-detail { margin-top: 5rpx; }
+.read-dot { width: 12rpx; height: 12rpx; border-radius: 50%; flex: none; }
+.read-dot.visible { background: #f55b52; }
+.subscribe-room + .subscribe-room { padding-top: 17rpx; border-top: 2rpx solid #e7ebf3; }

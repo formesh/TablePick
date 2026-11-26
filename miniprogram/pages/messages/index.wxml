@@ -1,0 +1,39 @@
+<top-bar title="消息">
+  <button slot="action" wx:if="{{unread}}" class="link" disabled="{{saving}}" bindtap="read">全部已读</button>
+</top-bar>
+<view class="shell flow message-shell">
+  <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <view class="dark-card card-pad message-banner">
+      <view class="between">
+        <view class="grow"><view class="banner-title">{{templateId ? '微信服务通知' : '消息提醒'}}</view><view class="tiny summary">{{templateId ? '可以为本场订阅一条服务通知' : '在小程序内查看点菜进度和收单提醒'}}</view></view>
+        <button class="action-button compact settings" bindtap="settings">{{showSettings ? '收起' : '设置'}}</button>
+      </view>
+      <view class="between prefs" wx:if="{{showSettings}}">
+        <button class="{{reminders[item.id] ? 'enabled' : ''}}" wx:for="{{reminderTypes}}" wx:key="id" bindtap="toggle" data-id="{{item.id}}" disabled="{{saving}}"><glyph name="{{reminders[item.id] ? 'check-circle' : 'bell'}}" size="{{28}}" tone="{{reminders[item.id] ? 'light' : 'soft'}}" />{{item.label}}</button>
+      </view>
+    </view>
+    <view wx:if="{{showSettings && templateId && rooms.length}}" class="card card-pad flow subscribe-panel">
+      <view class="bold">微信服务通知</view>
+      <view wx:for="{{rooms}}" wx:key="id" class="subscribe-room flow">
+        <view class="between"><text>{{item.name}}</text><text wx:if="{{item.myReminder}}" class="badge">已订阅</text></view>
+        <view class="bottom-actions" wx:if="{{!item.myReminder}}">
+          <button class="action-button compact" data-id="{{item.id}}" data-type="confirmed" bindtap="subscribe" disabled="{{saving}}">有人点好时</button>
+          <button class="action-button compact" data-id="{{item.id}}" data-type="all" bindtap="subscribe" disabled="{{saving}}">全部确认后</button>
+        </view>
+      </view>
+    </view>
+    <view class="state card" wx:if="{{!groups.length && !loading}}">有新的点菜进度时，消息会出现在这里。</view>
+    <view wx:for="{{groups}}" wx:key="date" class="flow message-group">
+      <view class="section-title">{{item.title}}</view>
+      <button wx:for="{{item.rows}}" wx:for-item="row" wx:key="id" class="card message-row flex {{row.unread ? 'unread' : ''}}" data-id="{{row.roomId}}" bindtap="open" hover-class="pressed">
+        <view class="tile {{row.unread ? 'blue' : 'gray'}}"><glyph name="{{row.icon}}" size="{{42}}" tone="{{row.unread ? 'blue' : 'muted'}}" /></view>
+        <view class="grow">
+          <view class="between"><view class="bold">{{row.title}}</view><text class="tiny dim">{{row.time}}</text></view>
+          <view class="small dim message-detail">{{row.roomName}}｜{{row.detail}}</view>
+        </view>
+        <view class="read-dot {{row.unread ? 'visible' : ''}}"></view>
+      </button>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,10 @@
+.bar { min-height: 76rpx; margin: 0 32rpx 22rpx; display: flex; align-items: center; justify-content: space-between; position: relative; gap: 12rpx; }
+.titles { flex: 1; min-width: 0; text-align: center; }
+.title { font-size: 39rpx; font-weight: 750; line-height: 1.15; overflow-wrap: break-word; }
+.subtitle { margin-top: 5rpx; font-size: 21rpx; color: #6d7685; }
+.back, .placeholder { width: 72rpx; height: 72rpx; flex: none; }
+.back { width: 72rpx !important; min-width: 72rpx; max-width: 72rpx; display: flex; align-items: center; justify-content: center; border: 0; padding: 0; margin: 0; border-radius: 50%; background: #ffffffca; box-shadow: 0 5rpx 17rpx #2636520a; }
+.back::after { border: 0; }
+.action { min-width: 72rpx; display:flex; justify-content:flex-end; }
+.leading .titles { text-align: left; }
+.leading .title { font-size: 59rpx; }

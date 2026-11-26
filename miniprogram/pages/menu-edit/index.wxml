@@ -1,0 +1,24 @@
+<top-bar title="{{existing ? '编辑菜单' : '新建菜单'}}" />
+<view class="shell flow edit-menu">
+  <view wx:if="{{error}}" class="card state">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <view><text class="field-label">菜单名称</text><view class="field"><input value="{{name}}" bindinput="inputName" maxlength="24" placeholder="例如：家常菜" aria-label="菜单名称" /></view></view>
+    <view class="between"><text class="section-title">菜品</text><button class="link" bindtap="add"><glyph name="plus" size="{{24}}" tone="blue" /> 添加菜品</button></view>
+    <view wx:if="{{!dishes.length && !loading}}" class="state card">添加这份菜单的第一道菜。</view>
+    <view wx:for="{{dishes}}" wx:key="index" class="card edit-card">
+      <button class="between dish-heading" bindtap="edit" data-index="{{index}}">
+        <view class="flex grow"><view class="tile lilac mini"><glyph name="{{item.icon || 'bowl'}}" size="{{29}}" tone="violet" /></view><view class="grow"><view class="bold">{{item.name || '新菜品'}}</view><view class="small dim">{{item.category}}</view></view></view>
+        <glyph name="{{editing === index ? 'chevron-down' : 'edit'}}" size="{{30}}" tone="muted" />
+      </button>
+      <view wx:if="{{editing === index}}" class="flow dish-fields">
+        <view class="field"><input bindinput="change" data-index="{{index}}" data-field="name" aria-label="菜名" value="{{item.name}}" maxlength="24" placeholder="菜名" /></view>
+        <picker range="{{categories}}" bindchange="category" data-index="{{index}}"><view class="field between">{{item.category}}<glyph name="chevron-down" size="{{26}}" tone="muted" /></view></picker>
+        <view class="field"><input bindinput="change" data-index="{{index}}" data-field="description" aria-label="菜品描述" value="{{item.description}}" maxlength="42" placeholder="菜品描述（选填）" /></view>
+        <view class="field"><input bindinput="change" data-index="{{index}}" data-field="optionText" aria-label="可选做法" value="{{item.optionText}}" maxlength="75" placeholder="可选做法，例如：微辣、不辣" /></view>
+        <button class="delete link" bindtap="remove" data-index="{{index}}"><glyph name="trash" size="{{26}}" />移除此菜品</button>
+      </view>
+    </view>
+    <button class="action-button" disabled="{{saving || loading}}" bindtap="save" hover-class="pressed">保存菜单</button>
+    <button class="delete link delete-menu" wx:if="{{existing}}" disabled="{{saving}}" bindtap="deleteMenu">删除菜单</button>
+  </block>
+</view>

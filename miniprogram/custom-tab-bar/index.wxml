@@ -1,0 +1,6 @@
+<view class="tab-dock">
+  <button wx:for="{{tabs}}" wx:key="page" class="tab {{index === selected ? 'active' : ''}}" data-index="{{index}}" bindtap="select">
+    <glyph name="{{item.icon}}" size="{{35}}" tone="{{index === selected ? 'light' : 'soft'}}" />
+    <text>{{item.label}}</text>
+  </button>
+</view>

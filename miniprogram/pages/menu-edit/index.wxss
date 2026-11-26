@@ -1,0 +1,7 @@
+.edit-card { padding: 18rpx 22rpx; }
+.edit-card .mini { width: 57rpx; height: 57rpx; border-radius: 17rpx; }
+.dish-heading { text-align: left; width: 100%; }
+.dish-fields { border-top: 2rpx solid #e8ecf5; padding-top: 15rpx; margin-top: 15rpx; gap: 12rpx; }
+.dish-fields .field { background: #f3f5fa; box-shadow: none; min-height: 75rpx; }
+.delete { color: #a43e4a; gap: 7rpx; }
+.delete-menu { justify-content: center; }

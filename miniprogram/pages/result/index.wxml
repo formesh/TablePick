@@ -1,0 +1,27 @@
+<top-bar title="最终清单" />
+<view class="shell flow result-shell">
+  <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <view wx:elif="{{loading && !room}}" class="state">正在加载清单…</view>
+  <block wx:elif="{{room}}">
+    <view class="dark-card result-banner">
+      <view class="seal"><glyph name="check" size="{{49}}" tone="light" /></view>
+      <view class="result-title">{{room.name}}</view>
+      <view class="result-date">已于{{closed}}收单 · {{room.confirmed}} 人确认</view>
+      <view class="result-stats">
+        <view><text>{{room.totals.dishes.length}}</text><text>道菜</text></view>
+        <view><text>{{room.totals.total}}</text><text>总份数</text></view>
+        <view><text>{{room.memberCount}}</text><text>参与人</text></view>
+      </view>
+    </view>
+    <view class="between"><text class="section-title">备菜清单</text><text class="small dim">按菜品与做法合并</text></view>
+    <view wx:if="{{!room.totals.dishes.length}}" class="state card">本场没有已确认的菜品。</view>
+    <view wx:for="{{room.totals.dishes}}" wx:key="id" class="card card-pad result-dish">
+      <view class="between"><text class="bold dish-title">{{item.name}}</text><text class="badge green">{{item.count}} 份</text></view>
+      <view class="between portion" wx:for="{{item.options}}" wx:for-item="choice" wx:key="option"><text class="dim">· {{choice.option}}</text><text class="bold">{{choice.count}} 份</text></view>
+    </view>
+    <view class="flow result-actions">
+      <button class="action-button secondary" bindtap="copy" hover-class="pressed"><glyph name="copy" size="{{32}}" />复制文字清单</button>
+      <button wx:if="{{room.resultToken}}" class="action-button primary" open-type="share" hover-class="pressed"><glyph name="share" size="{{32}}" tone="light" />分享结果到微信</button>
+    </view>
+  </block>
+</view>

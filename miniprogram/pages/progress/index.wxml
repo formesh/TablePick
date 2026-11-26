@@ -1,0 +1,34 @@
+<top-bar title="大家点的" subtitle="{{room.name}}">
+  <button slot="action" wx:if="{{room.isHost}}" class="icon-button" bindtap="manage" aria-label="房间管理"><glyph name="more" size="{{36}}" /></button>
+</top-bar>
+<view class="shell flow progress-shell">
+  <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <view wx:elif="{{loading && !room}}" class="state">正在加载进度…</view>
+  <block wx:elif="{{room && !room.closedAt}}">
+    <view class="dark-card card-pad between progress-summary">
+      <view class="grow"><view class="summary-title">已确认 {{room.total}} 份</view><view class="small">{{room.memberCount}} 人已加入 · {{room.confirmed}} 人已确认</view></view>
+      <button wx:if="{{room.isHost}}" class="action-button compact close-orders" disabled="{{saving}}" bindtap="close"><glyph name="lock" tone="peach" size="{{26}}" />收单</button>
+    </view>
+    <view class="between"><text class="section-title">成员进度</text><button class="link" wx:if="{{room.isHost}}" bindtap="manage">管理加入 <glyph name="chevron-right" size="{{22}}" tone="muted" /></button></view>
+    <view class="card card-pad flow manage-panel" wx:if="{{management && room.isHost}}">
+      <view class="between"><view><view class="bold">允许好友加入</view><view class="small dim">关闭后，之前的邀请链接会失效</view></view><switch checked="{{room.accepting}}" disabled="{{saving}}" color="#2F80FF" bindchange="toggleInvite" /></view>
+      <button wx:if="{{room.inviteToken}}" class="action-button compact" bindtap="invite"><glyph name="share" size="{{25}}" tone="light" />邀请好友</button>
+    </view>
+    <view class="card member-list">
+      <view class="member flex" wx:for="{{room.members}}" wx:key="key">
+        <view class="avatar {{item.tone}}">{{item.avatar}}</view>
+        <view class="grow"><view class="bold">{{item.name}}{{item.isMe ? '（我）' : ''}}</view><view class="small dim member-description">{{item.itemsLabel}}</view></view>
+        <text class="badge {{item.state === 'pending' ? 'amber' : ''}}">{{item.stateText}}</text>
+      </view>
+    </view>
+    <view class="section-title">已确认菜品</view>
+    <view class="state card" wx:if="{{!totals.length}}">菜品确认后会在这里汇总。</view>
+    <view class="card card-pad between total-dish" wx:for="{{totals}}" wx:key="id">
+      <view class="grow"><view class="bold">{{item.name}}</view><view class="small dim">{{item.detail}}</view></view><text class="bold">{{item.count}} 份</text>
+    </view>
+    <button wx:if="{{room.isHost}}" class="stock-toggle flex" bindtap="showStock"><glyph name="info" size="{{28}}" /> {{stock ? '收起供应管理' : '可临时标记售罄，已点成员会收到提示'}}<glyph name="{{stock ? 'chevron-down' : 'chevron-right'}}" size="{{22}}" /></button>
+    <view class="card card-pad" wx:if="{{stock && room.isHost}}">
+      <view class="stock-item between" wx:for="{{room.dishes}}" wx:key="id"><text>{{item.name}}</text><button class="link" disabled="{{saving}}" bindtap="stockChange" data-id="{{item.id}}">{{item.soldOut ? '恢复供应' : '标记售罄'}}</button></view>
+    </view>
+  </block>
+</view>

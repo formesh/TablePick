@@ -1,0 +1,17 @@
+<top-bar title="我的" show-back="{{false}}" centered="{{false}}" />
+<view class="shell tab-shell flow">
+  <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
+  <block wx:else>
+    <view class="dark-card card-pad flex identity">
+      <image wx:if="{{selectedAvatar || avatar}}" class="profile-avatar" src="{{selectedAvatar || avatar}}" mode="aspectFill" />
+      <view wx:else class="avatar">{{current ? current[0] : '我'}}</view>
+      <view class="section-title">{{current}}</view>
+    </view>
+    <view class="card card-pad flow">
+      <button class="action-button secondary" open-type="chooseAvatar" bindchooseavatar="chooseAvatar" disabled="{{saving || loading}}">选择微信头像</button>
+      <view><text class="field-label">点菜昵称</text><view class="field"><input type="nickname" aria-label="点菜昵称" placeholder="从键盘选择微信昵称" maxlength="32" value="{{nickname}}" bindinput="inputName" bindblur="inputName" /><glyph name="edit" size="{{31}}" tone="muted" /></view></view>
+      <button class="action-button" disabled="{{saving || loading}}" bindtap="save" hover-class="pressed">保存资料</button>
+    </view>
+    <button class="card card-pad between message-entry" bindtap="messages" hover-class="pressed"><view class="flex"><glyph name="bell" size="{{34}}" />消息通知</view><glyph name="chevron-right" size="{{26}}" tone="muted" /></button>
+  </block>
+</view>
