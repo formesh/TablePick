@@ -4,7 +4,7 @@
 .room-progress .tiny { margin-top: 3rpx; }
 .room-progress .progress-track { margin-top: 13rpx; }
 .member-icons { gap: 0; padding-left: 7rpx; }
-.member-icons .avatar { width: 51rpx; height: 51rpx; font-size: 21rpx; margin-left: -7rpx; border: 2rpx solid #f2f4fd; }
+.member-icons .avatar { width: 51rpx; height: 51rpx; margin-left: -7rpx; border: 2rpx solid #f2f4fd; }
 .categories { white-space: nowrap; display: flex; }
 .category { width: auto !important; border-radius: 30rpx; padding: 11rpx 20rpx; min-height: 54rpx; background: #ffffffc9; font-size: 23rpx; margin: 0 13rpx 0 0 !important; display: inline-flex; align-items: center; }
 .category-active { color: #fff; background: #1c1c1e; }

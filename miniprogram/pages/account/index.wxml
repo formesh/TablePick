@@ -1,13 +1,12 @@
 <view class="shell account" style="padding-top:{{top}}px">
   <view class="account-intro">
-    <view class="account-art"><glyph name="utensils" size="{{64}}" tone="violet" /></view>
+    <view class="account-art"><image class="brand-art-image" src="/assets/images/tablepick-logo.png" mode="aspectFill" aria-label="TablePick" /></view>
     <view class="account-title">TablePick</view>
     <view class="account-copy">{{registering ? '使用微信头像和昵称，方便好友认出你' : '登录后查看你的菜单和饭局'}}</view>
   </view>
   <view class="card card-pad flow account-form" wx:if="{{registering}}">
     <button class="action-button secondary avatar-choice" open-type="chooseAvatar" bindchooseavatar="chooseAvatar" disabled="{{saving}}">
-      <image wx:if="{{avatar}}" class="profile-avatar" src="{{avatar}}" mode="aspectFill" />
-      <glyph wx:else name="user" size="{{36}}" tone="violet" />
+      <image class="profile-avatar" src="{{avatar || '/assets/images/tablepick-logo.png'}}" mode="aspectFill" />
       {{avatar ? '更换头像' : '选择微信头像'}}
     </button>
     <view><text class="field-label">点菜昵称</text><view class="field"><input type="nickname" placeholder="从键盘选择微信昵称" maxlength="32" value="{{nickname}}" bindinput="inputName" bindblur="inputName" aria-label="点菜昵称" /><glyph name="edit" size="{{31}}" tone="muted" /></view></view>

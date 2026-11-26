@@ -1,14 +1,10 @@
 const { api } = require('./api')
 const { load, confirm, perform, stop, toast } = require('./ui')
-const initials = name => {
-  const [first, second] = Array.from(name)
-  return first === '小' && second ? second : first
-}
 const stateText = { pending: '待确认', confirmed: '已确认', skipped: '这次不点' }
 
 function decorate(room) {
-  const members = room.members.map((member, i) => ({
-    ...member, avatar: initials(member.name), tone: ['', 'orange', 'purple'][i % 3],
+  const members = room.members.map(member => ({
+    ...member,
     stateText: stateText[member.state],
     itemsLabel: member.items.map(item => item.name + ' ' + item.count).join('、') ||
       (member.state === 'skipped' ? '这次不点' : '还未提交点单')

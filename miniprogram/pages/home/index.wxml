@@ -8,7 +8,7 @@
     </view>
     <view class="home-title">今晚，和谁一起吃？</view>
     <view class="friends flex" wx:if="{{companions.length}}">
-      <view class="friends-list"><text wx:for="{{companions}}" wx:key="key" class="friend friend-{{index}}">{{item.glyph}}</text></view>
+      <view class="friends-list"><image wx:for="{{companions}}" wx:key="key" class="friend" src="/assets/images/tablepick-logo.png" mode="aspectFill" aria-label="{{item.name}}" /></view>
       <text>{{companions.length}} 位好友一起点过</text>
     </view>
   </view>
@@ -19,7 +19,7 @@
         <view class="hero-title">开一桌，<text class="hero-break"></text>把今晚留给朋友</view>
         <view class="hero-copy">边聊边选，菜单自动汇总</view>
       </view>
-      <view class="menu-art" aria-hidden="true"><view class="menu-layer layer-back"></view><view class="menu-layer layer-mid"></view><view class="menu-layer layer-front"><glyph name="utensils" size="{{53}}" tone="light" /></view></view>
+      <view class="menu-art" aria-hidden="true"><view class="menu-layer layer-back"></view><view class="menu-layer layer-mid"></view><view class="menu-layer layer-front"><image class="brand-art-image" src="/assets/images/tablepick-logo.png" mode="aspectFill" /></view></view>
     </view>
     <button class="hero-button" bindtap="create" hover-class="pressed">
       <view class="flex"><glyph name="sparkles" size="{{36}}" tone="peach" /><text>创建今晚的饭局</text></view>

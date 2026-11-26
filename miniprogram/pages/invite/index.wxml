@@ -3,7 +3,7 @@
   <view wx:if="{{error}}" class="card state">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
   <view wx:elif="{{loading}}" class="state">正在准备邀请…</view>
   <block wx:elif="{{room}}">
-    <view class="intro"><view class="invite-art"><glyph name="utensils" size="{{62}}" tone="violet" /></view><view class="invite-title">饭局已经准备好</view><view class="small dim">分享给好友，大家就可以一起点菜</view></view>
+    <view class="intro"><view class="invite-art"><image class="brand-art-image" src="/assets/images/tablepick-logo.png" mode="aspectFill" aria-label="TablePick" /></view><view class="invite-title">饭局已经准备好</view><view class="small dim">分享给好友，大家就可以一起点菜</view></view>
     <view class="dark-card card-pad flow invite-card">
       <view class="between"><view class="grow"><view class="room-name">{{room.name}}</view><view class="room-note">{{room.menuName}} · {{room.dishesCount}} 道供应</view></view><text class="invite-badge">{{room.closedAt ? '已收单' : '点菜中'}}</text></view>
       <view class="flex"><glyph name="clock" size="{{28}}" tone="soft" />{{deadline}}</view>

@@ -3,8 +3,7 @@
   <view wx:if="{{error}}" class="state card">{{error}}<button class="link" bindtap="refresh">重新加载</button></view>
   <block wx:else>
     <view class="dark-card card-pad flex identity">
-      <image wx:if="{{selectedAvatar || avatar}}" class="profile-avatar" src="{{selectedAvatar || avatar}}" mode="aspectFill" />
-      <view wx:else class="avatar">{{current ? current[0] : '我'}}</view>
+      <image class="profile-avatar" src="{{selectedAvatar || avatar || '/assets/images/tablepick-logo.png'}}" mode="aspectFill" aria-label="我的头像" />
       <view class="section-title">{{current}}</view>
     </view>
     <view class="card card-pad flow">

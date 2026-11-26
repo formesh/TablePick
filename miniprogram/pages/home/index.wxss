@@ -7,8 +7,7 @@
 .home-title { font-size: 58rpx; font-weight: 780; letter-spacing: -2rpx; line-height: 1.15; margin: 15rpx 0; }
 .friends { gap: 14rpx; color: #4b5563; font-size: 23rpx; }
 .friends-list { display: flex; padding-left: 10rpx; }
-.friend { display: flex; align-items: center; justify-content: center; width: 44rpx; height: 44rpx; margin-left: -10rpx; border: 2rpx solid #f9faff; border-radius: 50%; color: #fff; font-size: 19rpx; font-weight: 700; }
-.friend-0 { background: #ffac61; }.friend-1 { background: #7c86f8; }.friend-2 { background: #eb82a1; }
+.friend { display: block; width: 44rpx; height: 44rpx; margin-left: -10rpx; border: 2rpx solid #f9faff; border-radius: 50%; }
 .hero { border-radius: 50rpx; background: linear-gradient(145deg,#fff3ee,#f0eeff 58%,#e8f1ff); border: 2rpx solid #fff; padding: 32rpx; box-shadow: 0 16rpx 28rpx #3f468318; }
 .hero-body { min-height: 206rpx; align-items: center; margin-bottom: 28rpx; }
 .hero-label { color: #62559a; font-size: 21rpx; font-weight: 650; display: flex; align-items: center; gap: 9rpx; }
@@ -19,7 +18,7 @@
 .menu-layer { position: absolute; border-radius: 30rpx; width: 135rpx; height: 164rpx; box-shadow: 0 10rpx 24rpx #33449926; }
 .layer-back { background: #f4a6b8; top: 10rpx; left: 62rpx; transform: rotate(-8deg); }
 .layer-mid { background: #7885e8; top: 35rpx; left: 10rpx; transform: rotate(7deg); }
-.layer-front { background: linear-gradient(145deg,#ff906f,#ff6b73); top: 41rpx; left: 65rpx; width: 128rpx; height: 152rpx; transform: rotate(-3deg); border: 2rpx solid #ffffff96; display: flex; align-items: center; justify-content: center; }
+.layer-front { background: #e7d9fb; top: 41rpx; left: 65rpx; width: 128rpx; height: 152rpx; transform: rotate(-3deg); border: 2rpx solid #ffffff96; overflow: hidden; }
 .hero-button { height: 96rpx; width: 100% !important; border-radius: 31rpx; background: #1d1b20; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 28rpx; font-weight: 650; box-shadow: 0 7rpx 14rpx #1d1b2038; }
 .arrow { display: flex; align-items: center; justify-content: center; width: 54rpx; height: 54rpx; border-radius: 50%; background: #ffffff19; flex: none; }
 .home-segment button { min-height: 74rpx; }

@@ -39,10 +39,9 @@ button[disabled]:not([type]) { opacity: .56; color: inherit; background: inherit
 .badge { display: inline-flex; align-items: center; padding: 5rpx 13rpx; border-radius: 18rpx; font-size: 21rpx; line-height: 1.2; font-weight: 650; color: #4945b6; background: #eeebff; white-space: nowrap; }
 .badge.amber { color: #785018; background: #ffefd1; }
 .badge.green { color: #21589d; background: #e6f3df; }
-.avatar { display: flex; align-items: center; justify-content: center; flex: none; width: 57rpx; height: 57rpx; border-radius: 50%; font-size: 24rpx; font-weight: 700; background: #d9e5ff; }
-.avatar.orange { background: #ffe7bc; }
-.avatar.purple { background: #e6dfff; }
-.profile-avatar { width: 76rpx; height: 76rpx; flex: none; border-radius: 50%; }
+.brand-art-image { display: block; width: 100%; height: 100%; border-radius: inherit; }
+.avatar { display: block; flex: none; width: 57rpx; height: 57rpx; border-radius: 50%; }
+.profile-avatar { display: block; width: 76rpx; height: 76rpx; flex: none; border-radius: 50%; }
 .tile { display: flex; align-items: center; justify-content: center; width: 82rpx; height: 82rpx; flex: none; border-radius: 24rpx; background: #eeeaff; }
 .tile.amber { background: #fff0d5; }
 .tile.rose { background: #ffe4e1; }

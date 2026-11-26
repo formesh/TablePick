@@ -37,7 +37,7 @@
     </view>
     <view class="card member-list">
       <view class="member flex" wx:for="{{room.members}}" wx:key="key">
-        <view class="avatar {{item.tone}}">{{item.avatar}}</view>
+        <image class="avatar" src="/assets/images/tablepick-logo.png" mode="aspectFill" aria-label="{{item.name}}" />
         <view class="grow"><view class="bold">{{item.name}}{{item.isMe ? '（我）' : ''}}</view><view class="small dim member-description">{{item.itemsLabel}}</view></view>
         <text class="badge {{item.state === 'pending' ? 'amber' : ''}}">{{item.stateText}}</text>
       </view>

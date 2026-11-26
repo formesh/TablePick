@@ -22,7 +22,7 @@ Page({
       const now = new Date()
       const weekday = '日一二三四五六'[now.getDay()]
       const date = '周' + weekday + ' · ' + (now.getMonth() + 1) + '月' + now.getDate() + '日'
-      this.setData({ date, rooms, unread, companions: companions.map((name, key) => ({ key, glyph: Array.from(name).slice(-1)[0] })),
+      this.setData({ date, rooms, unread, companions: companions.map((name, key) => ({ key, name })),
         hosted: rooms.filter(room => room.isHost).length })
       this.filter(this.data.selected)
     }, quiet === true)
